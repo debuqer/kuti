@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"log"
+	"net/http"
 	"os"
 
 	"github.com/urfave/cli"
@@ -39,10 +41,31 @@ func main() {
 				return nil
 			},
 		},
+		{
+			Name:    "serve",
+			Aliases: []string{"s"},
+			Usage:   "serves the application",
+			Action: func(c *cli.Context) error {
+				http.HandleFunc("/", getRoot)
+
+				fmt.Println("Listening on http://localhost:3333: ")
+				err := http.ListenAndServe(":3333", nil)
+				if err != nil {
+					fmt.Println("Template file assets/config.yml not found")
+					return nil
+				}
+
+				return nil
+			},
+		},
 	}
 
 	err := app.Run(os.Args)
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func getRoot(w http.ResponseWriter, r *http.Request) {
+	io.WriteString(w, "hello")
 }
