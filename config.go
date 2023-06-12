@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
 
 	"gopkg.in/yaml.v3"
@@ -26,8 +25,6 @@ func (c *Config) load() (err error) {
 	if err != nil {
 		return
 	}
-
-	fmt.Println(c)
 
 	return nil
 }
