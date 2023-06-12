@@ -12,6 +12,9 @@ type Config struct {
 		Host string
 		Port string
 	}
+	Template struct {
+		Dir string
+	}
 }
 
 func (c *Config) load() (err error) {

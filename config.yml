@@ -2,3 +2,5 @@ name: "Kuti"
 server:
   host: "localhost" 
   port: "3333"
+template:
+  dir: "templates/"  

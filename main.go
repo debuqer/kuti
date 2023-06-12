@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"text/template"
 
 	"github.com/urfave/cli"
 )
@@ -52,7 +53,11 @@ func main() {
 			Aliases: []string{"s"},
 			Usage:   "serves the application",
 			Action: func(c *cli.Context) error {
-				http.HandleFunc("/", getRoot)
+				template := template.Must(template.New("tpl").ParseGlob(_conf.Template.Dir + "*.html"))
+
+				http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+					template.ExecuteTemplate(w, "index.html", nil)
+				})
 
 				fmt.Println("Listening on http://localhost:3333: ")
 				err := http.ListenAndServe(_conf.Server.Host+":"+_conf.Server.Port, nil)
