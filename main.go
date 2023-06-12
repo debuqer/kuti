@@ -59,7 +59,7 @@ func main() {
 					template.ExecuteTemplate(w, "index.html", nil)
 				})
 
-				fmt.Println("Listening on http://localhost:3333: ")
+				fmt.Println("Listening on " + _conf.Server.Host + ":" + _conf.Server.Port + ":")
 				err := http.ListenAndServe(_conf.Server.Host+":"+_conf.Server.Port, nil)
 				if err != nil {
 					fmt.Println("Template file assets/config.yml not found")
