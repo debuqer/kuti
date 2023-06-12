@@ -1,13 +1,18 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 
 	"gopkg.in/yaml.v3"
 )
 
 type Config struct {
-	Name string
+	Name   string
+	Server struct {
+		Host string
+		Port string
+	}
 }
 
 func (c *Config) load() (err error) {
@@ -21,6 +26,8 @@ func (c *Config) load() (err error) {
 	if err != nil {
 		return
 	}
+
+	fmt.Println(c)
 
 	return nil
 }

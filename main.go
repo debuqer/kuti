@@ -36,7 +36,7 @@ func main() {
 					return nil
 				}
 
-				configTpl, err := os.ReadFile("assets/config.yml")
+				configTpl, err := os.ReadFile("assets/config.yml.example")
 				if err != nil {
 					fmt.Println("Template file assets/config.yml not found")
 					return nil
