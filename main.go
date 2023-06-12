@@ -3,11 +3,13 @@ package main
 import (
 	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 
 	"github.com/urfave/cli"
+	"gopkg.in/yaml.v3"
 )
 
 func main() {
@@ -17,6 +19,18 @@ func main() {
 	app.Action = func(c *cli.Context) error {
 		fmt.Println("boom! I say!")
 		return nil
+	}
+
+	buf, err := ioutil.ReadFile("config.yml")
+	if err != nil {
+		fmt.Println("Could not found config.yml")
+		return
+	}
+	config := &Config{}
+	err = yaml.Unmarshal(buf, config)
+	if err != nil {
+		fmt.Println("Bad configuration config.yml")
+		return
 	}
 
 	app.Commands = []cli.Command{
@@ -60,7 +74,7 @@ func main() {
 		},
 	}
 
-	err := app.Run(os.Args)
+	err = app.Run(os.Args)
 	if err != nil {
 		log.Fatal(err)
 	}
