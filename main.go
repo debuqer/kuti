@@ -55,7 +55,7 @@ func main() {
 				http.HandleFunc("/", getRoot)
 
 				fmt.Println("Listening on http://localhost:3333: ")
-				err := http.ListenAndServe(":3333", nil)
+				err := http.ListenAndServe(_conf.Server.Host+":"+_conf.Server.Port, nil)
 				if err != nil {
 					fmt.Println("Template file assets/config.yml not found")
 					return nil
