@@ -20,7 +20,7 @@ func main() {
 	_conf := Config{}
 	err := _conf.load()
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Fatal(err)
 	}
 
 	app.Commands = []cli.Command{
