@@ -1,0 +1,13 @@
+{{ template "base" .}}
+
+{{ define "title" }}
+    {{.Config.Name}}
+{{ end }}
+
+{{ define "owner" }}
+    {{.Config.Author.Name}}
+{{ end }}
+
+{{ define "content" }}
+    :)
+{{ end }}

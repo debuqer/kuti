@@ -18,8 +18,9 @@ type Post struct {
 }
 
 type Blog struct {
-	Config Config
-	Posts  []Post
+	Config      Config
+	CurrentPost Post
+	Posts       []Post
 }
 
 func mdToHTML(md []byte) []byte {

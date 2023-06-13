@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"text/template"
 
+	"github.com/julienschmidt/httprouter"
 	"github.com/urfave/cli"
 )
 
@@ -17,19 +18,22 @@ func ServeCommand(_conf Config) cli.Command {
 			blog := Blog{}
 			blog.fetch(_conf)
 
-			template := template.Must(template.New("tpl").ParseGlob(_conf.Template.Dir + "*.html"))
+			template, err := template.New("tpl").ParseGlob(_conf.Template.Dir + "*.html")
+			if err != nil {
+				fmt.Println(err)
+			}
 
-			fs := http.FileServer(http.Dir("./assets"))
-			http.Handle("/assets/", http.StripPrefix("/assets/", fs))
+			router := httprouter.New()
+			router.ServeFiles("/assets/*filepath", http.Dir("assets/"))
 
-			http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+			router.GET("/", func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 				template.ExecuteTemplate(w, "index.html", blog)
 			})
 
 			fmt.Println("Listening on " + _conf.Server.Host + ":" + _conf.Server.Port + ": ")
-			err := http.ListenAndServe(_conf.Server.Host+":"+_conf.Server.Port, nil)
+			err = http.ListenAndServe(_conf.Server.Host+":"+_conf.Server.Port, router)
 			if err != nil {
-				fmt.Println("Template file assets/config.yml not found")
+				fmt.Println(err.Error())
 				return nil
 			}
 

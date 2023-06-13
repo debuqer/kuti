@@ -7,6 +7,8 @@ github.com/gomarkdown/markdown v0.0.0-20220627144906-e9a81102ebeb h1:5b/eFaSaKPF
 github.com/gomarkdown/markdown v0.0.0-20220627144906-e9a81102ebeb/go.mod h1:JDGcbDT52eL4fju3sZ4TeHGsQwhG9nbDV21aMyhwPoA=
 github.com/gomarkdown/mdtohtml v0.0.0-20220720154245-d5126442bcee h1:K0HD10xVzFVXIvi//7xipQpvis/iIBShyjvkD43gs7E=
 github.com/gomarkdown/mdtohtml v0.0.0-20220720154245-d5126442bcee/go.mod h1:yQkMXrQ+Kf0W5KUNz8xIh1x14C3Hiyw/2j/zcUaDrwA=
+github.com/julienschmidt/httprouter v1.3.0 h1:U0609e9tgbseu3rBINet9P48AI/D3oJs4dN7jwJOQ1U=
+github.com/julienschmidt/httprouter v1.3.0/go.mod h1:JR6WtHb+2LUe8TCKY3cZOxFyyO8IZAc4RVcycCCAKdM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/russross/blackfriday/v2 v2.1.0 h1:JIOH55/0cWyOuilr9/qlrm0BSXldqnqwMsf35Ld67mk=
 github.com/russross/blackfriday/v2 v2.1.0/go.mod h1:+Rmxgy9KzJVeS9/2gXHxylqXiyQDYRxCVz55jmeOWTM=
