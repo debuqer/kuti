@@ -1,4 +1,9 @@
 name: "Kuti"
+author:
+  name: "debuqer"
+  username: "debuqer"
+  description: "Hellllo"
+  profile: "salam.jpg"
 server:
   host: "localhost" 
   port: "3333"

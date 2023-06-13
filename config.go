@@ -8,6 +8,12 @@ import (
 
 type Config struct {
 	Name   string
+	Author struct {
+		Name        string
+		Username    string
+		Description string
+		Profile     string
+	}
 	Server struct {
 		Host string
 		Port string
