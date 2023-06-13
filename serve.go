@@ -16,8 +16,11 @@ func ServeCommand(_conf Config) cli.Command {
 		Action: func(c *cli.Context) error {
 			template := template.Must(template.New("tpl").ParseGlob(_conf.Template.Dir + "*.html"))
 
+			fs := http.FileServer(http.Dir("./assets"))
+			http.Handle("/assets/", http.StripPrefix("/assets/", fs))
+
 			http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-				template.ExecuteTemplate(w, "index.html", nil)
+				template.ExecuteTemplate(w, "base.html", nil)
 			})
 
 			fmt.Println("Listening on " + _conf.Server.Host + ":" + _conf.Server.Port + ":")
