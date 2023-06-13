@@ -21,6 +21,9 @@ type Config struct {
 	Template struct {
 		Dir string
 	}
+	Source struct {
+		Dir string
+	}
 }
 
 func (c *Config) load() (err error) {

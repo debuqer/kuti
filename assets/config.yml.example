@@ -9,3 +9,5 @@ server:
   port: "3333"
 template:
   dir: "templates/"  
+source:
+  dir: "source/"  
