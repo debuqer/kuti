@@ -1,1 +1,23 @@
-<h1>Hello</h1>
+{{ template "base" }}
+
+{{ define "title" }}
+    Blog
+{{ end }}
+
+
+{{ define "content" }}
+    <div class="container">
+    <!-- begin post -->
+        <div class="card">
+            <a href="<?= $user->profile ?>"></a>
+            <div class="card-block">
+                <?= \Michelf\Markdown::defaultTransform($readme) ?>
+            </div>
+        </div>
+    <!-- end post -->
+    </div>
+{{end}}
+
+{{ define "owner" }}
+    Debuqer
+{{ end }}

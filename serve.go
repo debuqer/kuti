@@ -20,7 +20,7 @@ func ServeCommand(_conf Config) cli.Command {
 			http.Handle("/assets/", http.StripPrefix("/assets/", fs))
 
 			http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-				template.ExecuteTemplate(w, "base.html", nil)
+				template.ExecuteTemplate(w, "index.html", nil)
 			})
 
 			fmt.Println("Listening on " + _conf.Server.Host + ":" + _conf.Server.Port + ":")

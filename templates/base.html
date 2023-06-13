@@ -1,3 +1,4 @@
+{{define "base"}}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="assets/img/favicon.ico">
-    <title>%SV Title SV%</title>
+    <title>{{ template "title" }}</title>
     <!-- Bootstrap core CSS -->
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
     <!-- Fonts -->
@@ -52,13 +53,13 @@
 <!-- Begin Site Title
 ================================================== -->
 <div class="container">
-    %SV Content SV%
+    {{template "content" .}}
 
     <!-- Begin Footer
     ================================================== -->
     <div class="footer">
         <p class="pull-left">
-            Copyright &copy; 2023 Debuqer
+            Copyright &copy; 2023 {{ template "owner" }}
         </p>
         <p class="pull-right">
             Mediumish Theme by <a target="_blank" href="https://www.wowthemes.net">WowThemes.net</a>
@@ -81,3 +82,4 @@
 <script src="assets/js/ie10-viewport-bug-workaround.js"></script>
 </body>
 </html>
+{{end}}
