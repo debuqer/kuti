@@ -40,13 +40,13 @@
                     <!-- begin post -->
                     <div class="authorpostbox">
                         <div class="card">
-                            <a href="{{ $post.Title }}"></a>
+                            <a href="/article/{{ $post.Title }}"></a>
                             <div class="card-block">
-                                <h2 class="card-title"><a href="{{ $post.Title }}">{{ $post.Title }}</a></h2>
+                                <h2 class="card-title"><a href="/article/{{ $post.Title }}">{{ $post.Title }}</a></h2>
                                 <div class="metafooter">
                                     <div class="wrapfooter">
 									<span class="meta-footer-thumb">
-									<a href="{{ $author.Username }}"><img class="author-thumb" src="<?= $user->profile ?>" alt="{{ $author.Username }}"></a>
+									<a href="{{ $author.Username }}"><img class="author-thumb" src="" alt="{{ $author.Username }}"></a>
 									</span>
                                         <span class="author-meta">
 									<span class="post-name"><a href="{{ $author.Username }}">{{ $author.Username }}</a></span><br/>

@@ -15,6 +15,7 @@ type Post struct {
 	Content       string
 	Date          string
 	EstimatedTime int
+	Tags          []string
 }
 
 type Blog struct {
@@ -43,19 +44,7 @@ func (b *Blog) fetch(_conf Config) error {
 	entries, _ := os.ReadDir(_conf.Source.Dir)
 	for _, e := range entries {
 		if !e.IsDir() {
-			fs, _ := os.OpenFile(_conf.Source.Dir+"/"+e.Name(), os.O_RDONLY, 0644)
-			date, _ := fs.Stat()
-
-			buf, _ := os.ReadFile(_conf.Source.Dir + "/" + e.Name())
-
-			content := bytes.NewBuffer(mdToHTML(buf)).String()
-
-			post := Post{
-				e.Name(),
-				content,
-				date.ModTime().Format("January 02, 2006 15:04"),
-				len(strings.Split(content, " ")) / 250,
-			}
+			post := b.find(_conf, e.Name())
 
 			posts = append(posts, post)
 		}
@@ -65,4 +54,23 @@ func (b *Blog) fetch(_conf Config) error {
 	b.Posts = posts
 
 	return nil
+}
+
+func (b *Blog) find(_conf Config, title string) Post {
+	fs, _ := os.OpenFile(_conf.Source.Dir+"/"+title, os.O_RDONLY, 0644)
+	date, _ := fs.Stat()
+
+	buf, _ := os.ReadFile(_conf.Source.Dir + "/" + title)
+
+	content := bytes.NewBuffer(mdToHTML(buf)).String()
+
+	post := Post{
+		title,
+		content,
+		date.ModTime().Format("January 02, 2006 15:04"),
+		len(strings.Split(content, " ")) / 250,
+		make([]string, 0),
+	}
+
+	return post
 }
