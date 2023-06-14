@@ -26,6 +26,11 @@ type Config struct {
 		Dir string
 		Ext string
 	}
+	Routes map[string]struct {
+		Parameter string
+		Dir       string
+		Template  string
+	}
 }
 
 func (c *Config) load() (err error) {

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"path"
+	"strings"
 	"text/template"
 
 	"github.com/julienschmidt/httprouter"
@@ -32,18 +33,27 @@ func ServeCommand(_conf Config) cli.Command {
 
 			template := template.Must(template.New("tpl").ParseFiles(path.Join(_conf.Template.Dir, "base.html")))
 
-			router.GET("/", func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-				template.ParseFiles(path.Join(_conf.Template.Dir, "index.html"))
+			for pattern, page := range _conf.Routes {
+				fullPath := pattern
+				if page.Parameter != "" {
+					fullPath += ":" + page.Parameter
+				}
 
-				template.ExecuteTemplate(w, "index.html", blog)
-			})
+				router.GET(fullPath, func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+					segments := strings.Split(fullPath, "/")
+					lastP := segments[0 : len(segments)-1]
+					exceptParameter := strings.Join(lastP, "/") + "/"
 
-			router.GET("/article/:article", func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-				template.ParseFiles(path.Join(_conf.Template.Dir, "article.html"))
+					page := _conf.Routes[exceptParameter]
 
-				blog.CurrentPost = blog.find(_conf, p.ByName("article"))
-				template.ExecuteTemplate(w, "article.html", blog)
-			})
+					template.ParseFiles(path.Join(_conf.Template.Dir, page.Template))
+					if page.Parameter != "" && p.ByName(page.Parameter) != "" {
+						blog.CurrentPost = blog.find(_conf, path.Join(page.Dir, p.ByName(page.Parameter)))
+					}
+
+					template.ExecuteTemplate(w, page.Template, blog)
+				})
+			}
 
 			fmt.Println("Listening on " + _conf.Server.Host + ":" + _conf.Server.Port + ": ")
 			err := http.ListenAndServe(_conf.Server.Host+":"+_conf.Server.Port, router)

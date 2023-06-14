@@ -13,3 +13,16 @@ template:
 source:
   dir: "source/"  
   ext: "md"
+routes:
+  "/":
+    parameter: ""
+    dir: ""
+    template: "index.html" 
+  "/article/": 
+    parameter: "article"
+    dir: ""
+    template: "article.html"   
+  "/help/": 
+    parameter: "help"
+    dir: "v1/"
+    template: "article.html"    
