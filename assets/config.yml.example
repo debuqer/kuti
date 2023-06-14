@@ -3,7 +3,7 @@ author:
   name: "debuqer"
   username: "debuqer"
   description: "Hellllo"
-  profile: "salam.jpg"
+  profile: "assets/img/logo.png"
 server:
   host: "localhost" 
   port: "3333"
