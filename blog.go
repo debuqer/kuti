@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"os"
+	"path"
 	"strings"
 
 	"github.com/gomarkdown/markdown"
@@ -57,10 +58,17 @@ func (b *Blog) fetch(_conf Config) error {
 }
 
 func (b *Blog) find(_conf Config, title string) Post {
-	fs, _ := os.OpenFile(_conf.Source.Dir+"/"+title, os.O_RDONLY, 0644)
+	ext := ""
+	if !strings.HasSuffix(title, "."+_conf.Source.Ext) {
+		ext += "." + _conf.Source.Ext
+	}
+
+	fileAddr := path.Join(_conf.Source.Dir + "/" + title + ext)
+
+	fs, _ := os.OpenFile(fileAddr, os.O_RDONLY, 0644)
 	date, _ := fs.Stat()
 
-	buf, _ := os.ReadFile(_conf.Source.Dir + "/" + title)
+	buf, _ := os.ReadFile(fileAddr)
 
 	content := bytes.NewBuffer(mdToHTML(buf)).String()
 

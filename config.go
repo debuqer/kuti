@@ -24,6 +24,7 @@ type Config struct {
 	}
 	Source struct {
 		Dir string
+		Ext string
 	}
 }
 

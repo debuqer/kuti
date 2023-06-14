@@ -12,3 +12,4 @@ template:
   dir: "templates/"  
 source:
   dir: "source/"  
+  ext: "md"
