@@ -26,7 +26,7 @@ func ServeCommand(_conf Config) cli.Command {
 			_conf.Server.Url = "http://" + _conf.Server.Host + port + "/"
 
 			blog := Blog{}
-			blog.fetch(_conf)
+			blog.fetch(_conf, _conf.Source.Dir)
 
 			router := httprouter.New()
 			router.ServeFiles("/assets/*filepath", http.Dir("assets/"))

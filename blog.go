@@ -22,7 +22,7 @@ type Post struct {
 type Blog struct {
 	Config      Config
 	CurrentPost Post
-	Posts       []Post
+	Posts       map[string]map[string]Post
 }
 
 func mdToHTML(md []byte) []byte {
@@ -39,20 +39,25 @@ func mdToHTML(md []byte) []byte {
 	return markdown.Render(doc, renderer)
 }
 
-func (b *Blog) fetch(_conf Config) error {
-	posts := make([]Post, 0)
+func (b *Blog) fetch(_conf Config, dir string) error {
+	posts := make(map[string]Post, 0)
 
-	entries, _ := os.ReadDir(_conf.Source.Dir)
+	entries, _ := os.ReadDir(dir)
 	for _, e := range entries {
-		if !e.IsDir() {
+		if e.IsDir() {
+			b.fetch(_conf, path.Join(dir, e.Name()))
+		} else {
 			post := b.find(_conf, e.Name())
 
-			posts = append(posts, post)
+			posts[e.Name()] = post
 		}
 	}
 
 	b.Config = _conf
-	b.Posts = posts
+	if b.Posts == nil {
+		b.Posts = make(map[string]map[string]Post)
+	}
+	b.Posts[dir] = posts
 
 	return nil
 }

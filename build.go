@@ -17,7 +17,7 @@ func BuildCommand(_conf Config) cli.Command {
 		Usage:   "Build the application",
 		Action: func(c *cli.Context) error {
 			blog := Blog{}
-			blog.fetch(_conf)
+			blog.fetch(_conf, _conf.Source.Dir)
 
 			cp.Copy("assets", "builds/assets")
 
