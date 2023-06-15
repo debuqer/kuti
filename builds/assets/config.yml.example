@@ -1,0 +1,28 @@
+name: "Kuti"
+author:
+  name: "debuqer"
+  username: "debuqer"
+  description: "Hellllo"
+  profile: "assets/img/logo.png"
+server:
+  host: "localhost" 
+  port: "3333"
+  url: ""
+template:
+  dir: "templates/"  
+source:
+  dir: "source/"  
+  ext: "md"
+routes:
+  "/":
+    parameter: ""
+    dir: ""
+    template: "index.html" 
+  "/article/": 
+    parameter: "article"
+    dir: ""
+    template: "article.html"   
+  "/help/": 
+    parameter: "help"
+    dir: "v1/"
+    template: "article.html"    

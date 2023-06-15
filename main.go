@@ -26,6 +26,7 @@ func main() {
 	app.Commands = []cli.Command{
 		InitCommand(_conf),
 		ServeCommand(_conf),
+		BuildCommand(_conf),
 	}
 
 	err = app.Run(os.Args)
