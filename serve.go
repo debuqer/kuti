@@ -48,7 +48,7 @@ func ServeCommand(_conf Config) cli.Command {
 
 					template.ParseFiles(path.Join(_conf.Template.Dir, page.Template))
 					if page.Parameter != "" && p.ByName(page.Parameter) != "" {
-						blog.CurrentPost = blog.find(_conf, path.Join(page.Dir, p.ByName(page.Parameter)))
+						blog.CurrentPost = blog.find(_conf, path.Join(_conf.Source.Dir, page.Dir, p.ByName(page.Parameter)))
 					}
 
 					template.ExecuteTemplate(w, page.Template, blog)
