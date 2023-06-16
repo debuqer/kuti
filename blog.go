@@ -59,8 +59,7 @@ func (b *Blog) fetch(_conf Config, dir string) error {
 	if b.Posts == nil {
 		b.Posts = make(map[string][]Post)
 	}
-	b.Posts[dir] = posts
-
+	b.Posts[strings.Replace(dir, _conf.Source.Dir, "", 1)] = posts
 	return nil
 }
 
