@@ -47,7 +47,7 @@ func (b *Blog) fetch(_conf Config, dir string) error {
 		if e.IsDir() {
 			b.fetch(_conf, path.Join(dir, e.Name()))
 		} else {
-			post := b.find(_conf, e.Name())
+			post := b.find(_conf, path.Join(dir, e.Name()))
 
 			posts[e.Name()] = post
 		}
@@ -62,13 +62,13 @@ func (b *Blog) fetch(_conf Config, dir string) error {
 	return nil
 }
 
-func (b *Blog) find(_conf Config, title string) Post {
+func (b *Blog) find(_conf Config, addr string) Post {
 	ext := ""
-	if !strings.HasSuffix(title, "."+_conf.Source.Ext) {
+	if !strings.HasSuffix(addr, "."+_conf.Source.Ext) {
 		ext += "." + _conf.Source.Ext
 	}
 
-	fileAddr := path.Join(_conf.Source.Dir + "/" + title + ext)
+	fileAddr := path.Join(addr + ext)
 
 	fs, _ := os.OpenFile(fileAddr, os.O_RDONLY, 0644)
 	date, _ := fs.Stat()
@@ -78,7 +78,7 @@ func (b *Blog) find(_conf Config, title string) Post {
 	content := bytes.NewBuffer(mdToHTML(buf)).String()
 
 	post := Post{
-		title,
+		addr,
 		content,
 		date.ModTime().Format("January 02, 2006 15:04"),
 		len(strings.Split(content, " ")) / 250,
