@@ -77,8 +77,10 @@ func (b *Blog) find(_conf Config, addr string) Post {
 
 	content := bytes.NewBuffer(mdToHTML(buf)).String()
 
+	fileName := strings.Split(fs.Name(), "/")[len(strings.Split(fs.Name(), "/"))-1]
+	fileName = strings.Replace(fileName, "."+_conf.Source.Ext, "", 1)
 	post := Post{
-		addr,
+		fileName,
 		content,
 		date.ModTime().Format("January 02, 2006 15:04"),
 		len(strings.Split(content, " ")) / 250,
