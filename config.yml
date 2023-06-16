@@ -5,24 +5,24 @@ author:
   description: "Hellllo"
   profile: "assets/img/logo.png"
 server:
-  host: "localhost" 
-  port: "3333"
+  host: "localhost"
+  port: "3334"
   url: ""
 template:
-  dir: "templates/"  
+  dir: "templates/"
 source:
-  dir: "source/"  
+  dir: "source/"
   ext: "md"
 routes:
   "/":
     parameter: ""
     dir: ""
-    template: "index.html" 
-  "/article/": 
+    template: "index.html"
+  "/article/":
     parameter: "article"
     dir: ""
-    template: "article.html"   
-  "/help/": 
+    template: "article.html"
+  "/help/":
     parameter: "help"
     dir: "v1/"
-    template: "article.html"    
+    template: "article.html"

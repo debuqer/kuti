@@ -28,8 +28,6 @@ func ServeCommand(_conf Config) cli.Command {
 			blog := Blog{}
 			blog.fetch(_conf, _conf.Source.Dir)
 
-			fmt.Println(blog)
-
 			router := httprouter.New()
 			router.ServeFiles("/assets/*filepath", http.Dir("assets/"))
 

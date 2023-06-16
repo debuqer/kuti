@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"os"
 	"path"
 	"strings"
@@ -22,7 +23,7 @@ type Post struct {
 type Blog struct {
 	Config      Config
 	CurrentPost Post
-	Posts       map[string]map[string]Post
+	Posts       map[string][]Post
 }
 
 func mdToHTML(md []byte) []byte {
@@ -40,7 +41,7 @@ func mdToHTML(md []byte) []byte {
 }
 
 func (b *Blog) fetch(_conf Config, dir string) error {
-	posts := make(map[string]Post, 0)
+	posts := make([]Post, 0)
 
 	entries, _ := os.ReadDir(dir)
 	for _, e := range entries {
@@ -49,13 +50,14 @@ func (b *Blog) fetch(_conf Config, dir string) error {
 		} else {
 			post := b.find(_conf, path.Join(dir, e.Name()))
 
-			posts[e.Name()] = post
+			fmt.Println(post.Title + " added to " + dir)
+			posts = append(posts, post)
 		}
 	}
 
 	b.Config = _conf
 	if b.Posts == nil {
-		b.Posts = make(map[string]map[string]Post)
+		b.Posts = make(map[string][]Post)
 	}
 	b.Posts[dir] = posts
 

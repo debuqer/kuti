@@ -37,7 +37,7 @@
             <div class="listrecent listrelated">
                 {{ $author := .Config.Author }}
                 {{ $server := .Config.Server }}
-                {{ range $post := .Posts }}
+                {{ range $post := index .Posts "source/" }}
                     <!-- begin post -->
                     <div class="authorpostbox">
                         <div class="card">
