@@ -15,6 +15,7 @@ import (
 type Post struct {
 	Title         string
 	Content       string
+	Link          string
 	Date          string
 	EstimatedTime int
 	Tags          []string
@@ -83,6 +84,7 @@ func (b *Blog) find(_conf Config, addr string) Post {
 	post := Post{
 		fileName,
 		content,
+		path.Join("article", fileName),
 		date.ModTime().Format("January 02, 2006 15:04"),
 		len(strings.Split(content, " ")) / 250,
 		make([]string, 0),

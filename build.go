@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"path"
+	"strings"
 	"text/template"
 
 	cp "github.com/otiai10/copy"
@@ -24,15 +26,36 @@ func BuildCommand(_conf Config) cli.Command {
 			template := template.Must(template.New("tpl").ParseFiles(path.Join(_conf.Template.Dir, "base.html")))
 
 			for pattern, page := range _conf.Routes {
-				fullPath := pattern
 				if page.Parameter != "" {
-					fullPath += ":" + page.Parameter
-				}
+					entries, _ := os.ReadDir(path.Join(_conf.Source.Dir, page.Dir))
+					for _, e := range entries {
+						if !e.IsDir() {
+							param := e.Name()
+							outputDir := strings.Replace(e.Name(), "."+_conf.Source.Ext, "", 1)
+							outputFile := "index.html"
 
-				if page.Parameter == "" {
+							template.ParseFiles(path.Join(_conf.Template.Dir, page.Template))
+
+							curDir := ""
+							fmt.Println(strings.Split(path.Join("builds/", pattern, outputDir), "/"))
+							for _, f := range strings.Split(path.Join("builds/", pattern, outputDir), "/") {
+								curDir = path.Join(curDir, f)
+								os.Mkdir(curDir, os.ModePerm)
+							}
+							f, err := os.Create(path.Join("builds/", pattern, outputDir, outputFile))
+							if err != nil {
+								log.Fatal(err)
+							}
+							defer f.Close()
+
+							blog.CurrentPost = blog.find(_conf, path.Join(_conf.Source.Dir, page.Dir, param))
+							template.ExecuteTemplate(f, page.Template, blog)
+						}
+					}
+				} else {
 					template.ParseFiles(path.Join(_conf.Template.Dir, page.Template))
 
-					f, err := os.OpenFile(path.Join("builds/", pattern, page.Template), os.O_CREATE|os.O_WRONLY, 0644)
+					f, err := os.Create(path.Join("builds/", pattern, page.Template))
 					if err != nil {
 						log.Fatal(err)
 					}
