@@ -8,6 +8,8 @@ import (
 	"github.com/urfave/cli"
 )
 
+var _conf Config
+
 func main() {
 	app := cli.NewApp()
 	app.Name = "Kuti"
@@ -17,16 +19,15 @@ func main() {
 		return nil
 	}
 
-	_conf := Config{}
 	err := _conf.load()
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	app.Commands = []cli.Command{
-		InitCommand(_conf),
-		ServeCommand(_conf),
-		BuildCommand(_conf),
+		InitCommand(),
+		ServeCommand(),
+		BuildCommand(),
 	}
 
 	err = app.Run(os.Args)

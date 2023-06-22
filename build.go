@@ -12,7 +12,7 @@ import (
 	"github.com/urfave/cli"
 )
 
-func BuildCommand(_conf Config) cli.Command {
+func BuildCommand() cli.Command {
 	return cli.Command{
 		Name:    "build",
 		Aliases: []string{"b"},
@@ -24,7 +24,7 @@ func BuildCommand(_conf Config) cli.Command {
 			}
 
 			blog := Blog{}
-			blog.fetch(_conf, _conf.Source.Dir)
+			blog.fetch(_conf.Source.Dir)
 
 			cp.Copy("assets", "builds/assets")
 

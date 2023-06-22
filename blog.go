@@ -41,13 +41,13 @@ func mdToHTML(md []byte) []byte {
 	return markdown.Render(doc, renderer)
 }
 
-func (b *Blog) fetch(_conf Config, dir string) error {
+func (b *Blog) fetch(dir string) error {
 	posts := make([]Post, 0)
 
 	entries, _ := os.ReadDir(dir)
 	for _, e := range entries {
 		if e.IsDir() {
-			b.fetch(_conf, path.Join(dir, e.Name()))
+			b.fetch(path.Join(dir, e.Name()))
 		} else {
 			post := b.find(_conf, path.Join(dir, e.Name()))
 

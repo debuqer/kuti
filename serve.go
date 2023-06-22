@@ -11,7 +11,7 @@ import (
 	"github.com/urfave/cli"
 )
 
-func ServeCommand(_conf Config) cli.Command {
+func ServeCommand() cli.Command {
 	return cli.Command{
 		Name:    "serve",
 		Aliases: []string{"s"},
@@ -26,7 +26,7 @@ func ServeCommand(_conf Config) cli.Command {
 			_conf.Server.Url = "http://" + _conf.Server.Host + port + "/"
 
 			blog := Blog{}
-			blog.fetch(_conf, _conf.Source.Dir)
+			blog.fetch(_conf.Source.Dir)
 
 			router := httprouter.New()
 			router.ServeFiles("/assets/*filepath", http.Dir("assets/"))
