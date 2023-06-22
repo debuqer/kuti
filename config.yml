@@ -8,6 +8,7 @@ server:
   host: "localhost"
   port: "3334"
   url: ""
+  ext: "/index.html"
 template:
   dir: "templates/"
 source:

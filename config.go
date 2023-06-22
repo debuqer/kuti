@@ -18,6 +18,7 @@ type Config struct {
 		Host string
 		Port string
 		Url  string
+		Ext  string
 	}
 	Template struct {
 		Dir string
