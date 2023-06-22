@@ -18,6 +18,11 @@ func BuildCommand(_conf Config) cli.Command {
 		Aliases: []string{"b"},
 		Usage:   "Build the application",
 		Action: func(c *cli.Context) error {
+			if _conf.Server.Url == "" {
+				_conf.Server.Url, _ = os.Getwd()
+				_conf.Server.Url += "/builds/"
+			}
+
 			blog := Blog{}
 			blog.fetch(_conf, _conf.Source.Dir)
 
