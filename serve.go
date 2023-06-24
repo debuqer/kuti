@@ -65,15 +65,4 @@ func ServeCommand(_conf Config) cli.Command {
 			return nil
 		},
 	}
-
-	// f, err := os.OpenFile("build/article/"+p.ByName("article")+".html", os.O_APPEND|os.O_WRONLY, 0644)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// defer f.Close()
-
-	// err = template.ExecuteTemplate(f, "article.html", blog)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
 }
