@@ -21,6 +21,7 @@ func BuildCommand() cli.Command {
 			blog := Blog{}
 			blog.fetch(_conf.Source.Dir)
 
+			os.RemoveAll("builds")
 			os.Mkdir("builds", os.ModePerm)
 			cp.Copy("assets", "builds/assets")
 
