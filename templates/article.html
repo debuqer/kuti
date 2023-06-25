@@ -1,7 +1,7 @@
 {{ template "base" .}}
 
 {{ define "title" }}
-    {{.Config.Name}}
+    {{.Config.Name}} - {{ .CurrentPost.Title }}
 {{ end }}
 
 {{ define "owner" }}
