@@ -49,7 +49,7 @@ func (b *Blog) fetch(dir string) error {
 		if e.IsDir() {
 			b.fetch(path.Join(dir, e.Name()))
 		} else {
-			post := b.find(_conf, path.Join(dir, e.Name()))
+			post := b.find(path.Join(dir, e.Name()))
 
 			fmt.Println(post.Title + " added to " + dir)
 			posts = append(posts, post)
@@ -64,7 +64,7 @@ func (b *Blog) fetch(dir string) error {
 	return nil
 }
 
-func (b *Blog) find(_conf Config, addr string) Post {
+func (b *Blog) find(addr string) Post {
 	ext := ""
 	if !strings.HasSuffix(addr, "."+_conf.Source.Ext) {
 		ext += "." + _conf.Source.Ext
