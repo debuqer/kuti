@@ -24,7 +24,7 @@
 
                         <hr>
                         <div class="col-md-2 col-xs-12">
-                            <img class="author-thumb" src='{{ url .Config.Author.Profile}}' alt="{{.Config.Author.Username}}">
+                            <img class="author-thumb" src='{{ asset .Config.Author.Profile}}' alt="{{.Config.Author.Username}}">
                         </div>
                     </div>
                 </div>
@@ -47,7 +47,7 @@
                                 <div class="metafooter">
                                     <div class="wrapfooter">
 									<span class="meta-footer-thumb">
-									<a href="{{ url $author.Username }}"><img class="author-thumb" src="{{ $server.Url }}{{ $author.Profile}}" alt="{{ $author.Username }}"></a>
+									<a href="{{ url $author.Username }}"><img class="author-thumb" src="{{ asset $author.Profile}}" alt="{{ $author.Username }}"></a>
 									</span>
                                         <span class="author-meta">
 									<span class="post-name"><a href="{{ url $author.Username }}">{{ $author.Username }}</a></span><br/>
