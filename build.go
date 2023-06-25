@@ -81,7 +81,7 @@ func BuildUrl(url string) string {
 		_conf.Server.Url += "/builds/"
 	}
 
-	return _conf.Server.Url + url + _conf.Server.Ext
+	return _conf.Server.Url + url
 }
 
 func BuildQualifiedUrl(url string) string {
