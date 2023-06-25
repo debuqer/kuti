@@ -6,9 +6,9 @@ author:
   profile: "assets/img/logo.png"
 server:
   host: "localhost"
-  port: "3334"
+  port: "3333"
   url: ""
-  ext: "index.html"
+  ext: "/index.html"
 template:
   dir: "templates/"
 source:
@@ -25,5 +25,5 @@ routes:
     template: "article.html"
   "/help/":
     parameter: "help"
-    dir: "nested/"
+    dir: "v1/"
     template: "article.html"

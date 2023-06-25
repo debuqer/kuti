@@ -84,7 +84,7 @@ func (b *Blog) find(_conf Config, addr string) Post {
 	post := Post{
 		fileName,
 		content,
-		_conf.Server.Url + path.Join("article", fileName) + _conf.Server.Ext,
+		_conf.Server.Url + path.Join("article", fileName),
 		date.ModTime().Format("January 02, 2006 15:04"),
 		len(strings.Split(content, " ")) / 250,
 		make([]string, 0),

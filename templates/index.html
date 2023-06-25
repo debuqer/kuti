@@ -24,7 +24,7 @@
 
                         <hr>
                         <div class="col-md-2 col-xs-12">
-                            <img class="author-thumb" src="{{.Config.Author.Profile}}" alt="{{.Config.Author.Username}}">
+                            <img class="author-thumb" src='{{ url .Config.Author.Profile}}' alt="{{.Config.Author.Username}}">
                         </div>
                     </div>
                 </div>
@@ -41,19 +41,19 @@
                     <!-- begin post -->
                     <div class="authorpostbox">
                         <div class="card">
-                            <a href="{{ $post.Link }}"></a>
+                            <a href="{{ url $post.Link }}"></a>
                             <div class="card-block">
-                                <h2 class="card-title"><a href="{{ $post.Link }}">{{ $post.Title }}</a></h2>
+                                <h2 class="card-title"><a href="{{ url $post.Link }}">{{ $post.Title }}</a></h2>
                                 <div class="metafooter">
                                     <div class="wrapfooter">
 									<span class="meta-footer-thumb">
-									<a href="{{ $author.Username }}"><img class="author-thumb" src="{{ $server.Url }}{{ $author.Profile}}" alt="{{ $author.Username }}"></a>
+									<a href="{{ url $author.Username }}"><img class="author-thumb" src="{{ $server.Url }}{{ $author.Profile}}" alt="{{ $author.Username }}"></a>
 									</span>
                                         <span class="author-meta">
-									<span class="post-name"><a href="{{ $author.Username }}">{{ $author.Username }}</a></span><br/>
+									<span class="post-name"><a href="{{ url $author.Username }}">{{ $author.Username }}</a></span><br/>
 									<span class="post-date">{{ $post.Date }}</span><span class="dot"></span><span class="post-read">{{ $post.EstimatedTime }} min read</span>
 									</span>
-                                        <span class="post-read-more"><a href="{{ $author.Username }}" title="Read Story"><svg class="svgIcon-use" width="25" height="25" viewbox="0 0 25 25"><path d="M19 6c0-1.1-.9-2-2-2H8c-1.1 0-2 .9-2 2v14.66h.012c.01.103.045.204.12.285a.5.5 0 0 0 .706.03L12.5 16.85l5.662 4.126a.508.508 0 0 0 .708-.03.5.5 0 0 0 .118-.285H19V6zm-6.838 9.97L7 19.636V6c0-.55.45-1 1-1h9c.55 0 1 .45 1 1v13.637l-5.162-3.668a.49.49 0 0 0-.676 0z" fill-rule="evenodd"></path></svg></a></span>
+                                        <span class="post-read-more"><a href="{{ url $author.Username }}" title="Read Story"><svg class="svgIcon-use" width="25" height="25" viewbox="0 0 25 25"><path d="M19 6c0-1.1-.9-2-2-2H8c-1.1 0-2 .9-2 2v14.66h.012c.01.103.045.204.12.285a.5.5 0 0 0 .706.03L12.5 16.85l5.662 4.126a.508.508 0 0 0 .708-.03.5.5 0 0 0 .118-.285H19V6zm-6.838 9.97L7 19.636V6c0-.55.45-1 1-1h9c.55 0 1 .45 1 1v13.637l-5.162-3.668a.49.49 0 0 0-.676 0z" fill-rule="evenodd"></path></svg></a></span>
                                     </div>
                                 </div>
                             </div>

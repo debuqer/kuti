@@ -18,17 +18,15 @@ func BuildCommand() cli.Command {
 		Aliases: []string{"b"},
 		Usage:   "Build the application",
 		Action: func(c *cli.Context) error {
-			if _conf.Server.Url == "" {
-				_conf.Server.Url, _ = os.Getwd()
-				_conf.Server.Url += "/builds/"
-			}
-
 			blog := Blog{}
 			blog.fetch(_conf.Source.Dir)
 
 			cp.Copy("assets", "builds/assets")
 
-			template := template.Must(template.New("tpl").ParseFiles(path.Join(_conf.Template.Dir, "base.html")))
+			template := template.Must(template.New("tpl").Funcs(template.FuncMap{
+				"asset": BuildUrl,
+				"url":   BuildQualifiedUrl,
+			}).ParseFiles(path.Join(_conf.Template.Dir, "base.html")))
 
 			for pattern, page := range _conf.Routes {
 				if page.Parameter != "" {
@@ -37,7 +35,7 @@ func BuildCommand() cli.Command {
 						if !e.IsDir() {
 							param := e.Name()
 							outputDir := strings.Replace(e.Name(), "."+_conf.Source.Ext, "", 1)
-							outputFile := "index.html"
+							outputFile := _conf.Server.Ext
 
 							template.ParseFiles(path.Join(_conf.Template.Dir, page.Template))
 
@@ -73,4 +71,21 @@ func BuildCommand() cli.Command {
 			return nil
 		},
 	}
+}
+
+func BuildUrl(url string) string {
+	if _conf.Server.Url == "" {
+		_conf.Server.Url, _ = os.Getwd()
+		_conf.Server.Url += "/builds/"
+	}
+
+	return _conf.Server.Url + url + _conf.Server.Ext
+}
+
+func BuildQualifiedUrl(url string) string {
+	if _conf.Server.Ext != "" {
+		return BuildUrl(url) + "/" + _conf.Server.Ext
+	}
+
+	return BuildUrl(url)
 }

@@ -17,29 +17,36 @@ func ServeCommand() cli.Command {
 		Aliases: []string{"s"},
 		Usage:   "serves the application",
 		Action: func(c *cli.Context) error {
-			port := ""
-			if _conf.Server.Port != "" {
-				port = (":" + _conf.Server.Port)
-			} else {
-				port = ""
-			}
-			_conf.Server.Url = "http://" + _conf.Server.Host + port + "/"
-
 			blog := Blog{}
 			blog.fetch(_conf.Source.Dir)
 
 			router := httprouter.New()
 			router.ServeFiles("/assets/*filepath", http.Dir("assets/"))
 
-			template := template.Must(template.New("tpl").ParseFiles(path.Join(_conf.Template.Dir, "base.html")))
+			template := template.Must(template.New("tpl").Funcs(template.FuncMap{
+				"asset": ServeUrl,
+				"url":   ServeQualifiedUrl,
+			}).ParseFiles(path.Join(_conf.Template.Dir, "base.html")))
 
 			for pattern, page := range _conf.Routes {
 				fullPath := pattern
 				if page.Parameter != "" {
 					fullPath += ":" + page.Parameter
 				}
+				if _conf.Server.Ext != "" {
+					if fullPath == "/" {
+						fullPath += _conf.Server.Ext
+					} else {
+						fullPath += "/" + _conf.Server.Ext
+					}
+				}
 
 				router.GET(fullPath, func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+					if _conf.Server.Ext != "" {
+						fullPath = strings.Replace(fullPath, "/"+_conf.Server.Ext, "", 1)
+						fullPath = strings.Replace(fullPath, _conf.Server.Ext, "", 1)
+					}
+
 					segments := strings.Split(fullPath, "/")
 					lastP := segments[0 : len(segments)-1]
 					exceptParameter := strings.Join(lastP, "/") + "/"
@@ -65,15 +72,23 @@ func ServeCommand() cli.Command {
 			return nil
 		},
 	}
+}
 
-	// f, err := os.OpenFile("build/article/"+p.ByName("article")+".html", os.O_APPEND|os.O_WRONLY, 0644)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// defer f.Close()
+func ServeUrl(url string) string {
+	port := ""
+	if _conf.Server.Port != "" {
+		port = (":" + _conf.Server.Port)
+	} else {
+		port = ""
+	}
+	_conf.Server.Url = "http://" + _conf.Server.Host + port + "/"
 
-	// err = template.ExecuteTemplate(f, "article.html", blog)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
+	return _conf.Server.Url + url
+}
+
+func ServeQualifiedUrl(url string) string {
+	if _conf.Server.Ext != "" {
+		return ServeUrl(url) + "/" + _conf.Server.Ext
+	}
+	return ServeUrl(url)
 }
