@@ -41,13 +41,7 @@ func ServeCommand() cli.Command {
 				if page.Type == "post" {
 
 					router.GET(fullPath, func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-						if _conf.Server.Ext != "" {
-							fullPath = strings.Replace(fullPath, "/"+_conf.Server.Ext, "", 1)
-							fullPath = strings.Replace(fullPath, _conf.Server.Ext, "", 1)
-						}
-
-						page := _conf.Routes[fullPath]
-						fmt.Println(p.ByName("filename"))
+						page := _conf.Routes[removeExt(fullPath)]
 
 						template.ParseFiles(path.Join(_conf.Template.Dir, page.Template))
 						blog.renderPost(w, template, page, p.ByName("filename"))
@@ -55,11 +49,6 @@ func ServeCommand() cli.Command {
 				} else {
 
 					router.GET(fullPath, func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-						if _conf.Server.Ext != "" {
-							fullPath = strings.Replace(fullPath, "/"+_conf.Server.Ext, "", 1)
-							fullPath = strings.Replace(fullPath, _conf.Server.Ext, "", 1)
-						}
-
 						page := _conf.Routes[pattern]
 
 						blog.renderIndex(w, template, page)
@@ -96,4 +85,13 @@ func ServeQualifiedUrl(url string) string {
 		return ServeUrl(url) + "/" + _conf.Server.Ext
 	}
 	return ServeUrl(url)
+}
+
+func removeExt(url string) string {
+	if _conf.Server.Ext != "" {
+		url = strings.Replace(url, "/"+_conf.Server.Ext, "", 1)
+		url = strings.Replace(url, _conf.Server.Ext, "", 1)
+	}
+
+	return url
 }
