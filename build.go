@@ -50,6 +50,8 @@ func BuildCommand() cli.Command {
 						}
 					}
 				} else {
+					buildNestedDirectories(path.Join("builds/", pattern))
+
 					f, err := os.Create(path.Join("builds/", pattern, page.Template))
 					if err != nil {
 						log.Fatal(err)
