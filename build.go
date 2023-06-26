@@ -53,7 +53,7 @@ func BuildCommand() cli.Command {
 							}
 							defer f.Close()
 
-							renderPost(f, template, blog, page, param)
+							blog.renderPost(f, template, page, param)
 						}
 					}
 				} else {
@@ -63,7 +63,7 @@ func BuildCommand() cli.Command {
 					}
 					defer f.Close()
 
-					renderIndex(f, template, blog, page)
+					blog.renderIndex(f, template, page)
 				}
 			}
 

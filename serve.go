@@ -55,7 +55,7 @@ func ServeCommand() cli.Command {
 
 						page := _conf.Routes[exceptParameter]
 
-						renderIndex(w, template, blog, page)
+						blog.renderIndex(w, template, page)
 					})
 				} else {
 					router.GET(fullPath, func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
@@ -71,7 +71,7 @@ func ServeCommand() cli.Command {
 						page := _conf.Routes[exceptParameter]
 
 						template.ParseFiles(path.Join(_conf.Template.Dir, page.Template))
-						renderPost(w, template, blog, page, p.ByName(page.Parameter))
+						blog.renderPost(w, template, page, p.ByName(page.Parameter))
 					})
 				}
 			}
