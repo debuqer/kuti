@@ -36,11 +36,11 @@ func BuildCommand() cli.Command {
 					for _, e := range entries {
 						if !e.IsDir() {
 							exploredFile, filename := fileInfo(e)
-							pattern = strings.Replace(pattern, ":filename", filename, -1)
+							dest := strings.Replace(pattern, ":filename", filename, -1)
 
-							buildNestedDirectories(path.Join("builds/", pattern))
+							buildNestedDirectories(path.Join("builds/", dest))
 
-							f, err := os.Create(path.Join("builds/", pattern, _conf.Server.Ext))
+							f, err := os.Create(path.Join("builds/", dest, _conf.Server.Ext))
 							if err != nil {
 								log.Fatal(err)
 							}
@@ -50,9 +50,10 @@ func BuildCommand() cli.Command {
 						}
 					}
 				} else {
-					buildNestedDirectories(path.Join("builds/", pattern))
+					dest := path.Join("builds/", pattern)
+					buildNestedDirectories(dest)
 
-					f, err := os.Create(path.Join("builds/", pattern, page.Template))
+					f, err := os.Create(path.Join(dest, _conf.Server.Ext))
 					if err != nil {
 						log.Fatal(err)
 					}
@@ -89,7 +90,9 @@ func buildNestedDirectories(addr string) {
 
 	for _, f := range strings.Split(addr, "/") {
 		curDir = path.Join(curDir, f)
-		os.Mkdir(curDir, os.ModePerm)
+		if _, err := os.Stat(curDir); os.IsNotExist(err) {
+			os.Mkdir(curDir, os.ModePerm)
+		}
 	}
 }
 
