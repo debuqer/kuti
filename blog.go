@@ -100,3 +100,10 @@ func renderIndex(wr io.Writer, tpl *template.Template, blog Blog, page Route) {
 
 	tpl.ExecuteTemplate(wr, page.Template, blog)
 }
+
+func renderPost(wr io.Writer, tpl *template.Template, blog Blog, page Route, param string) {
+	tpl.ParseFiles(path.Join(_conf.Template.Dir, page.Template))
+	blog.CurrentPost = blog.find(path.Join(_conf.Source.Dir, page.Dir, param))
+
+	tpl.ExecuteTemplate(wr, page.Template, blog)
+}

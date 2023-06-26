@@ -53,8 +53,7 @@ func BuildCommand() cli.Command {
 							}
 							defer f.Close()
 
-							blog.CurrentPost = blog.find(path.Join(_conf.Source.Dir, page.Dir, param))
-							template.ExecuteTemplate(f, page.Template, blog)
+							renderPost(f, template, blog, page, param)
 						}
 					}
 				} else {
