@@ -16,14 +16,17 @@ source:
   ext: "md"
 routes:
   "/":
+    type: "index"
     parameter: ""
     dir: ""
     template: "index.html"
   "/article/":
+    type: "post"
     parameter: "article"
     dir: ""
     template: "article.html"
   "/help/":
+    type: "post"
     parameter: "help"
     dir: "v1/"
     template: "article.html"
