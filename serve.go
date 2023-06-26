@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net/http"
 	"path"
-	"strings"
 	"text/template"
 
 	"github.com/julienschmidt/httprouter"
@@ -28,6 +27,8 @@ func ServeCommand() cli.Command {
 				"url":   ServeQualifiedUrl,
 			}).ParseFiles(path.Join(_conf.Template.Dir, "base.html")))
 
+			toBasePattern := make(map[string]string, 0)
+
 			for pattern, page := range _conf.Routes {
 				fullPath := pattern
 				if _conf.Server.Ext != "" {
@@ -37,19 +38,18 @@ func ServeCommand() cli.Command {
 						fullPath += "/" + _conf.Server.Ext
 					}
 				}
+				toBasePattern[fullPath] = pattern
 
 				if page.Type == "post" {
-
 					router.GET(fullPath, func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-						page := _conf.Routes[removeExt(fullPath)]
+						page := _conf.Routes[toBasePattern[fullPath]]
 
 						template.ParseFiles(path.Join(_conf.Template.Dir, page.Template))
 						blog.renderPost(w, template, page, p.ByName("filename"))
 					})
 				} else {
-
 					router.GET(fullPath, func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-						page := _conf.Routes[pattern]
+						page := _conf.Routes[toBasePattern[fullPath]]
 
 						blog.renderIndex(w, template, page)
 					})
@@ -85,13 +85,4 @@ func ServeQualifiedUrl(url string) string {
 		return ServeUrl(url) + "/" + _conf.Server.Ext
 	}
 	return ServeUrl(url)
-}
-
-func removeExt(url string) string {
-	if _conf.Server.Ext != "" {
-		url = strings.Replace(url, "/"+_conf.Server.Ext, "", 1)
-		url = strings.Replace(url, _conf.Server.Ext, "", 1)
-	}
-
-	return url
 }
