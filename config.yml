@@ -19,7 +19,7 @@ routes:
     type: "index"
     dir: ""
     template: "index.html"
-  "/debuqer":
+  "/about":
     type: "index"
     dir: ""
     template: "about.html"
