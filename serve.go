@@ -30,10 +30,6 @@ func ServeCommand() cli.Command {
 
 			for pattern, page := range _conf.Routes {
 				fullPath := pattern
-				if page.Parameter != "" {
-					fullPath += ":" + page.Parameter
-				}
-
 				if _conf.Server.Ext != "" {
 					if fullPath == "/" {
 						fullPath += _conf.Server.Ext
@@ -42,36 +38,31 @@ func ServeCommand() cli.Command {
 					}
 				}
 
-				if page.Parameter == "" {
+				if page.Type == "post" {
+
 					router.GET(fullPath, func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 						if _conf.Server.Ext != "" {
 							fullPath = strings.Replace(fullPath, "/"+_conf.Server.Ext, "", 1)
 							fullPath = strings.Replace(fullPath, _conf.Server.Ext, "", 1)
 						}
 
-						segments := strings.Split(fullPath, "/")
-						lastP := segments[0 : len(segments)-1]
-						exceptParameter := strings.Join(lastP, "/") + "/"
-
-						page := _conf.Routes[exceptParameter]
-
-						blog.renderIndex(w, template, page)
-					})
-				} else {
-					router.GET(fullPath, func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-						if _conf.Server.Ext != "" {
-							fullPath = strings.Replace(fullPath, "/"+_conf.Server.Ext, "", 1)
-							fullPath = strings.Replace(fullPath, _conf.Server.Ext, "", 1)
-						}
-
-						segments := strings.Split(fullPath, "/")
-						lastP := segments[0 : len(segments)-1]
-						exceptParameter := strings.Join(lastP, "/") + "/"
-
-						page := _conf.Routes[exceptParameter]
+						page := _conf.Routes[fullPath]
+						fmt.Println(p.ByName("filename"))
 
 						template.ParseFiles(path.Join(_conf.Template.Dir, page.Template))
-						blog.renderPost(w, template, page, p.ByName(page.Parameter))
+						blog.renderPost(w, template, page, p.ByName("filename"))
+					})
+				} else {
+
+					router.GET(fullPath, func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+						if _conf.Server.Ext != "" {
+							fullPath = strings.Replace(fullPath, "/"+_conf.Server.Ext, "", 1)
+							fullPath = strings.Replace(fullPath, _conf.Server.Ext, "", 1)
+						}
+
+						page := _conf.Routes[pattern]
+
+						blog.renderIndex(w, template, page)
 					})
 				}
 			}

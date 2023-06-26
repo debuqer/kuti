@@ -17,16 +17,13 @@ source:
 routes:
   "/":
     type: "index"
-    parameter: ""
     dir: ""
     template: "index.html"
-  "/article/":
+  "/article/:filename":
     type: "post"
-    parameter: "article"
     dir: ""
     template: "article.html"
-  "/help/":
+  "/help/:filename":
     type: "post"
-    parameter: "help"
     dir: "v1/"
     template: "article.html"
