@@ -42,23 +42,27 @@ func ServeCommand() cli.Command {
 				}
 
 				router.GET(fullPath, func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-					if _conf.Server.Ext != "" {
-						fullPath = strings.Replace(fullPath, "/"+_conf.Server.Ext, "", 1)
-						fullPath = strings.Replace(fullPath, _conf.Server.Ext, "", 1)
+					if page.Parameter == "" {
+						renderIndex(w, template, blog, page)
+					} else {
+						if _conf.Server.Ext != "" {
+							fullPath = strings.Replace(fullPath, "/"+_conf.Server.Ext, "", 1)
+							fullPath = strings.Replace(fullPath, _conf.Server.Ext, "", 1)
+						}
+
+						segments := strings.Split(fullPath, "/")
+						lastP := segments[0 : len(segments)-1]
+						exceptParameter := strings.Join(lastP, "/") + "/"
+
+						page := _conf.Routes[exceptParameter]
+
+						template.ParseFiles(path.Join(_conf.Template.Dir, page.Template))
+						if page.Parameter != "" && p.ByName(page.Parameter) != "" {
+							blog.CurrentPost = blog.find(path.Join(_conf.Source.Dir, page.Dir, p.ByName(page.Parameter)))
+						}
+
+						template.ExecuteTemplate(w, page.Template, blog)
 					}
-
-					segments := strings.Split(fullPath, "/")
-					lastP := segments[0 : len(segments)-1]
-					exceptParameter := strings.Join(lastP, "/") + "/"
-
-					page := _conf.Routes[exceptParameter]
-
-					template.ParseFiles(path.Join(_conf.Template.Dir, page.Template))
-					if page.Parameter != "" && p.ByName(page.Parameter) != "" {
-						blog.CurrentPost = blog.find(path.Join(_conf.Source.Dir, page.Dir, p.ByName(page.Parameter)))
-					}
-
-					template.ExecuteTemplate(w, page.Template, blog)
 				})
 			}
 

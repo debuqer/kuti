@@ -6,6 +6,12 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+type Route struct {
+	Parameter string
+	Dir       string
+	Template  string
+}
+
 type Config struct {
 	Name   string
 	Author struct {
@@ -27,11 +33,7 @@ type Config struct {
 		Dir string
 		Ext string
 	}
-	Routes map[string]struct {
-		Parameter string
-		Dir       string
-		Template  string
-	}
+	Routes map[string]Route
 }
 
 func (c *Config) load() (err error) {

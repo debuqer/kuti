@@ -3,9 +3,11 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"io"
 	"os"
 	"path"
 	"strings"
+	"text/template"
 
 	"github.com/gomarkdown/markdown"
 	"github.com/gomarkdown/markdown/html"
@@ -91,4 +93,10 @@ func (b *Blog) find(addr string) Post {
 	}
 
 	return post
+}
+
+func renderIndex(wr io.Writer, tpl *template.Template, blog Blog, page Route) {
+	tpl.ParseFiles(path.Join(_conf.Template.Dir, page.Template))
+
+	tpl.ExecuteTemplate(wr, page.Template, blog)
 }

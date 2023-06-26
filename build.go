@@ -58,15 +58,13 @@ func BuildCommand() cli.Command {
 						}
 					}
 				} else {
-					template.ParseFiles(path.Join(_conf.Template.Dir, page.Template))
-
 					f, err := os.Create(path.Join("builds/", pattern, page.Template))
 					if err != nil {
 						log.Fatal(err)
 					}
 					defer f.Close()
 
-					template.ExecuteTemplate(f, page.Template, blog)
+					renderIndex(f, template, blog, page)
 				}
 			}
 
