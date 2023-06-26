@@ -19,6 +19,10 @@ routes:
     type: "index"
     dir: ""
     template: "index.html"
+  "/debuqer":
+    type: "index"
+    dir: ""
+    template: "about.html"
   "/article/:filename":
     type: "post"
     dir: ""
