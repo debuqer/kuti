@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"path"
+	"sort"
 	"strings"
 	"text/template"
 
@@ -62,6 +63,11 @@ func (b *Blog) fetch(dir string) error {
 	if b.Posts == nil {
 		b.Posts = make(map[string][]Post)
 	}
+
+	sort.SliceStable(posts, func(i, j int) bool {
+		return strings.Compare(posts[i].Date, posts[j].Date) == 1
+	})
+
 	b.Posts[strings.Replace(dir, _conf.Source.Dir, "", 1)] = posts
 	return nil
 }
