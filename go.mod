@@ -13,6 +13,7 @@ require (
 require (
 	github.com/cpuguy83/go-md2man/v2 v2.0.2 // indirect
 	github.com/gomarkdown/mdtohtml v0.0.0-20220720154245-d5126442bcee // indirect
+	github.com/pahanini/go-sitemap-generator v0.0.0-20161102132113-fe0794d1e806 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	golang.org/x/sys v0.0.0-20220715151400-c0bba94af5f8 // indirect
 )

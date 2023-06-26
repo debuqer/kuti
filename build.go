@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io/fs"
 	"log"
 	"os"
@@ -9,6 +10,7 @@ import (
 	"text/template"
 
 	cp "github.com/otiai10/copy"
+	"github.com/pahanini/go-sitemap-generator"
 	"github.com/urfave/cli"
 )
 
@@ -24,6 +26,13 @@ func BuildCommand() cli.Command {
 			os.RemoveAll("builds")
 			os.Mkdir("builds", os.ModePerm)
 			cp.Copy("assets", "builds/assets")
+
+			g := sitemap.New(sitemap.Options{
+				Filename: "sitemap",
+				Dir:      "builds/",
+				BaseURL:  ServeUrl(""),
+			})
+			g.Open()
 
 			template := template.Must(template.New("tpl").Funcs(template.FuncMap{
 				"asset": BuildUrl,
@@ -47,20 +56,30 @@ func BuildCommand() cli.Command {
 							defer f.Close()
 
 							blog.renderPost(f, template, page, exploredFile)
+							g.Add(sitemap.URL{Loc: ServeQualifiedUrl(dest), Priority: `0.5`})
 						}
 					}
 				} else {
-					dest := path.Join("builds/", pattern)
-					buildNestedDirectories(dest)
+					dest := path.Join(pattern)
+					buildNestedDirectories(path.Join("builds/", dest))
 
-					f, err := os.Create(path.Join(dest, _conf.Server.Ext))
+					f, err := os.Create(path.Join("builds/", dest, _conf.Server.Ext))
 					if err != nil {
 						log.Fatal(err)
 					}
 					defer f.Close()
 
 					blog.renderIndex(f, template, page)
+					g.Add(sitemap.URL{Loc: ServeQualifiedUrl(dest), Priority: `0.5`})
 				}
+			}
+
+			fmt.Println(g)
+
+			e := g.Close()
+			if e != nil {
+				panic(e)
+
 			}
 
 			return nil
