@@ -55,8 +55,8 @@ func BuildCommand() cli.Command {
 							}
 							defer f.Close()
 
-							blog.renderPost(f, template, page, exploredFile)
-							g.Add(sitemap.URL{Loc: ServeQualifiedUrl(dest), Priority: `0.5`})
+							go blog.renderPost(f, template, page, exploredFile)
+							go g.Add(sitemap.URL{Loc: ServeQualifiedUrl(dest), Priority: `0.5`})
 						}
 					}
 				} else {
@@ -69,8 +69,8 @@ func BuildCommand() cli.Command {
 					}
 					defer f.Close()
 
-					blog.renderIndex(f, template, page)
-					g.Add(sitemap.URL{Loc: ServeQualifiedUrl(dest), Priority: `0.5`})
+					go blog.renderIndex(f, template, page)
+					go g.Add(sitemap.URL{Loc: ServeQualifiedUrl(dest), Priority: `0.5`})
 				}
 			}
 
