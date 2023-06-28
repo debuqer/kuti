@@ -11,6 +11,7 @@ type Route struct {
 	Parameter string
 	Dir       string
 	Template  string
+	Paginate  int
 }
 
 type Config struct {

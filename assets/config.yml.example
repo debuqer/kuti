@@ -6,9 +6,9 @@ author:
   profile: "assets/img/logo.png"
 server:
   host: "localhost"
-  port: "3333"
+  port: "3334"
   url: ""
-  ext: "/index.html"
+  ext: "index.html"
 template:
   dir: "templates/"
 source:
@@ -19,11 +19,19 @@ routes:
     type: "index"
     dir: ""
     template: "index.html"
+    paginate: 1
+  "/about":
+    type: "index"
+    dir: ""
+    template: "about.html"
+    paginate: 0
   "/article/:filename":
     type: "post"
     dir: ""
     template: "article.html"
+    paginate: 0
   "/help/:filename":
     type: "post"
-    dir: "v1/"
+    dir: "nested/"
     template: "article.html"
+    paginate: 0

@@ -19,15 +19,19 @@ routes:
     type: "index"
     dir: ""
     template: "index.html"
+    paginate: 1
   "/about":
     type: "index"
     dir: ""
     template: "about.html"
+    paginate: 0
   "/article/:filename":
     type: "post"
     dir: ""
     template: "article.html"
+    paginate: 0
   "/help/:filename":
     type: "post"
     dir: "nested/"
     template: "article.html"
+    paginate: 0
