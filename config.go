@@ -7,6 +7,7 @@ import (
 )
 
 type Route struct {
+	Type      string
 	Parameter string
 	Dir       string
 	Template  string
