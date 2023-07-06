@@ -101,8 +101,12 @@ func (b *Blog) find(addr string) Post {
 	return post
 }
 
-func GetList(addr string) []Post {
+func GetPostList(addr string) []Post {
 	return blog.Posts[addr]
+}
+
+func GetRootPosts() []Post {
+	return GetPostList("")
 }
 
 func GetPost(addr string) Post {

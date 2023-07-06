@@ -37,7 +37,8 @@ func BuildCommand() cli.Command {
 				"post":        GetPost,
 				"contentof":   GetPostContent,
 				"currentPost": CurrentPost,
-				"posts":       GetList,
+				"postsof":     GetPostList,
+				"posts":       GetRootPosts,
 			}).ParseFiles(path.Join(_conf.Template.Dir, "base.html")))
 
 			for pattern, page := range _conf.Routes {
