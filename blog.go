@@ -113,6 +113,10 @@ func GetPostContent(addr string) string {
 	return GetPost(addr).Content
 }
 
+func CurrentPost() Post {
+	return blog.CurrentPost
+}
+
 func (blog *Blog) renderIndex(wr io.Writer, tpl *template.Template, page Route) {
 	tpl.ParseFiles(path.Join(_conf.Template.Dir, page.Template))
 
