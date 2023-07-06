@@ -14,11 +14,8 @@ func ServeCommand() cli.Command {
 	return cli.Command{
 		Name:    "serve",
 		Aliases: []string{"s"},
-		Usage:   "serves the application",
+		Usage:   "Serves the application",
 		Action: func(c *cli.Context) error {
-			blog := Blog{}
-			blog.fetch(_conf.Source.Dir)
-
 			router := httprouter.New()
 			router.ServeFiles("/assets/*filepath", http.Dir("assets/"))
 

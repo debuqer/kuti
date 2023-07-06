@@ -7,6 +7,7 @@ import (
 )
 
 var _conf Config
+var blog Blog
 
 func main() {
 	app := cli.NewApp()
@@ -17,7 +18,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-
+	blog = Blog{}
+	blog.fetch(_conf.Source.Dir)
 	app.Commands = []cli.Command{
 		InitCommand(),
 		ServeCommand(),

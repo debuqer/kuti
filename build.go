@@ -20,9 +20,6 @@ func BuildCommand() cli.Command {
 		Aliases: []string{"b"},
 		Usage:   "Build the application",
 		Action: func(c *cli.Context) error {
-			blog := Blog{}
-			blog.fetch(_conf.Source.Dir)
-
 			os.RemoveAll("builds")
 			os.Mkdir("builds", os.ModePerm)
 			cp.Copy("assets", "builds/assets")
