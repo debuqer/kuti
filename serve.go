@@ -77,9 +77,7 @@ func ServeUrl(url string) string {
 	} else {
 		port = ""
 	}
-	_conf.Server.Url = "http://" + _conf.Server.Host + port + "/"
-
-	return _conf.Server.Url + url
+	return "http://" + _conf.Server.Host + port + "/" + url
 }
 
 func ServeQualifiedUrl(url string) string {
