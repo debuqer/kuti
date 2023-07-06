@@ -101,6 +101,18 @@ func (b *Blog) find(addr string) Post {
 	return post
 }
 
+func GetList(addr string) []Post {
+	return blog.Posts[addr]
+}
+
+func GetPost(addr string) Post {
+	return blog.find(path.Join(_conf.Source.Dir, addr))
+}
+
+func CurrentPost() Post {
+	return blog.CurrentPost
+}
+
 func (blog *Blog) renderIndex(wr io.Writer, tpl *template.Template, page Route) {
 	tpl.ParseFiles(path.Join(_conf.Template.Dir, page.Template))
 

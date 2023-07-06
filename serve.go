@@ -20,8 +20,11 @@ func ServeCommand() cli.Command {
 			router.ServeFiles("/assets/*filepath", http.Dir("assets/"))
 
 			template := template.Must(template.New("tpl").Funcs(template.FuncMap{
-				"asset": ServeUrl,
-				"url":   ServeQualifiedUrl,
+				"asset":       ServeUrl,
+				"url":         ServeQualifiedUrl,
+				"post":        GetPost,
+				"posts":       GetList,
+				"currentPost": CurrentPost,
 			}).ParseFiles(path.Join(_conf.Template.Dir, "base.html")))
 
 			toBasePattern := make(map[string]string, 0)

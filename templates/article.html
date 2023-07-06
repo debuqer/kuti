@@ -1,7 +1,7 @@
 {{ template "base" .}}
 
 {{ define "title" }}
-    {{.Config.Name}} - {{ .CurrentPost.Title }}
+    {{.Config.Name}} - {{ currentPost.Title }}
 {{ end }}
 
 {{ define "owner" }}
@@ -24,10 +24,10 @@
 
 		<!-- Begin Post -->
 		<div class="col-md-8 col-md-offset-2 col-xs-12">
-            <h1>{{ .CurrentPost.Title }}</h1>
+            <h1>{{ currentPost.Title }}</h1>
 			<!-- Begin Post Content -->
 			<div class="article-post">
-				{{ .CurrentPost.Content }}
+				{{ currentPost.Content }}
 			</div>
 			<!-- End Post Content -->
 
@@ -35,7 +35,7 @@
             <!-- Begin Tags -->
             <div class="after-post-tags">
                 <ul class="tags">
-                    {{ range .CurrentPost.Tags }}
+                    {{ range currentPost.Tags }}
                         <li><a href="#">{{ . }}</a></li>
                     {{ end }}
                 </ul>
@@ -51,7 +51,7 @@
                     <div class="col-md-10">
                         <a class="link-dark" href="">{{ .Config.Author.Name }}</a>
                         <span class="author-description">{{ .Config.Author.Description }}</span>
-                        <span class="post-date">{{ .CurrentPost.Date }}</span><span class="dot"></span><span class="post-read">{{ .CurrentPost.EstimatedTime }} min read</span>
+                        <span class="post-date">{{ currentPost.Date }}</span><span class="dot"></span><span class="post-read">{{ currentPost.EstimatedTime }} min read</span>
                     </div>
                 </div>
                 <!-- End Top Menta -->

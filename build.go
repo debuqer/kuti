@@ -32,8 +32,11 @@ func BuildCommand() cli.Command {
 			g.Open()
 
 			template := template.Must(template.New("tpl").Funcs(template.FuncMap{
-				"asset": BuildUrl,
-				"url":   BuildQualifiedUrl,
+				"asset":       BuildUrl,
+				"url":         BuildQualifiedUrl,
+				"post":        GetPost,
+				"posts":       GetList,
+				"currentPost": CurrentPost,
 			}).ParseFiles(path.Join(_conf.Template.Dir, "base.html")))
 
 			for pattern, page := range _conf.Routes {
