@@ -1,9 +1,9 @@
-name: "Kuti"
+name: "Blog of debuqer"
 author:
-  name: "debuqer"
+  name: "MohammadBagher Abbasi"
   username: "debuqer"
-  description: "Hellllo"
-  profile: "assets/img/logo.png"
+  description: "PHP Developer, trying to focus on DEBUGGING"
+  profile: "assets/img/profile.jpeg"
 server:
   host: "localhost"
   port: "3334"
@@ -19,19 +19,19 @@ routes:
     type: "index"
     dir: ""
     template: "index.html"
-    paginate: 1
   "/about":
     type: "index"
     dir: ""
     template: "about.html"
-    paginate: 0
-  "/article/:filename":
+  "/cv":
+    type: "index"
+    dir: ""
+    template: "cv.html"
+  "/blog":
+    type: "index"
+    dir: ""
+    template: "blog.html"
+  "/blog/content/:filename":
     type: "post"
     dir: ""
     template: "article.html"
-    paginate: 0
-  "/help/:filename":
-    type: "post"
-    dir: "nested/"
-    template: "article.html"
-    paginate: 0
