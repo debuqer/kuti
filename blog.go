@@ -109,8 +109,8 @@ func GetPost(addr string) Post {
 	return blog.find(path.Join(_conf.Source.Dir, addr))
 }
 
-func CurrentPost() Post {
-	return blog.CurrentPost
+func GetPostContent(addr string) string {
+	return GetPost(addr).Content
 }
 
 func (blog *Blog) renderIndex(wr io.Writer, tpl *template.Template, page Route) {
