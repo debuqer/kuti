@@ -1,12 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"io/fs"
 	"log"
 	"os"
 	"path"
 	"strings"
+	"sync"
 	"text/template"
 
 	cp "github.com/otiai10/copy"
@@ -20,6 +20,8 @@ func BuildCommand() cli.Command {
 		Aliases: []string{"b"},
 		Usage:   "Build the application",
 		Action: func(c *cli.Context) error {
+			var wg sync.WaitGroup
+
 			os.RemoveAll("builds")
 			os.Mkdir("builds", os.ModePerm)
 			cp.Copy("assets", "builds/assets")
@@ -57,7 +59,7 @@ func BuildCommand() cli.Command {
 							}
 							defer f.Close()
 
-							go blog.renderPost(f, template, page, exploredFile)
+							blog.renderPost(f, template, page, exploredFile)
 							go g.Add(sitemap.URL{Loc: ServeQualifiedUrl(dest), Priority: `0.5`})
 						}
 					}
@@ -71,12 +73,12 @@ func BuildCommand() cli.Command {
 					}
 					defer f.Close()
 
-					go blog.renderIndex(f, template, page)
+					blog.renderIndex(f, template, page)
 					go g.Add(sitemap.URL{Loc: ServeQualifiedUrl(dest), Priority: `0.5`})
 				}
 			}
 
-			fmt.Println(g)
+			wg.Wait()
 
 			e := g.Close()
 			if e != nil {
