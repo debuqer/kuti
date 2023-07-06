@@ -31,7 +31,7 @@ routes:
     type: "index"
     dir: ""
     template: "blog.html"
-  "/blog/content/:filename":
+  "/blog/post/:filename":
     type: "post"
-    dir: ""
+    dir: "/blog"
     template: "article.html"
