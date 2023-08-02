@@ -53,3 +53,14 @@ routes:
     dir: "/blog"
     template: "article.html"
 ```
+
+
+## Template 
+
+Templates should be designed by go html/template package
+
+Templates functions:
+
+### contentof
+
+will replace the content of given file name 
