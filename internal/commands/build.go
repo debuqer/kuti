@@ -1,4 +1,4 @@
-package main
+package commands
 
 import (
 	"io/fs"
@@ -9,6 +9,8 @@ import (
 	"sync"
 	"text/template"
 
+	"github.com/debuqer/kuti/internal/cms"
+	"github.com/debuqer/kuti/internal/config"
 	cp "github.com/otiai10/copy"
 	"github.com/pahanini/go-sitemap-generator"
 	"github.com/urfave/cli"
@@ -33,19 +35,22 @@ func BuildCommand() cli.Command {
 			})
 			g.Open()
 
+			blog := cms.Blog{}
+			blog.Fetch(config.Cfg.Source.Dir)
+
 			template := template.Must(template.New("tpl").Funcs(template.FuncMap{
 				"asset":       BuildUrl,
 				"url":         BuildQualifiedUrl,
-				"post":        GetPost,
-				"contentof":   GetPostContent,
-				"currentPost": CurrentPost,
-				"postsof":     GetPostList,
-				"posts":       GetRootPosts,
-			}).ParseFiles(path.Join(_conf.Template.Dir, "base.html")))
+				"post":        blog.GetPost,
+				"contentof":   blog.GetPostContent,
+				"currentPost": blog.CurrentPost,
+				"postsof":     blog.GetPostList,
+				"posts":       blog.GetRootPosts,
+			}).ParseFiles(path.Join(config.Cfg.Template.Dir, "base.html")))
 
-			for pattern, page := range _conf.Routes {
+			for pattern, page := range config.Cfg.Routes {
 				if page.Type == "post" {
-					entries, _ := os.ReadDir(path.Join(_conf.Source.Dir, page.Dir))
+					entries, _ := os.ReadDir(path.Join(config.Cfg.Source.Dir, page.Dir))
 					for _, e := range entries {
 						if !e.IsDir() {
 							exploredFile, filename := fileInfo(e)
@@ -53,13 +58,13 @@ func BuildCommand() cli.Command {
 
 							buildNestedDirectories(path.Join("builds/", dest))
 
-							f, err := os.Create(path.Join("builds/", dest, _conf.Server.Ext))
+							f, err := os.Create(path.Join("builds/", dest, config.Cfg.Server.Ext))
 							if err != nil {
 								log.Fatal(err)
 							}
 							defer f.Close()
 
-							blog.renderPost(f, template, page, exploredFile)
+							blog.RenderPost(f, template, page, exploredFile)
 							go g.Add(sitemap.URL{Loc: ServeQualifiedUrl(dest), Priority: `0.5`})
 						}
 					}
@@ -67,13 +72,13 @@ func BuildCommand() cli.Command {
 					dest := path.Join(pattern)
 					buildNestedDirectories(path.Join("builds/", dest))
 
-					f, err := os.Create(path.Join("builds/", dest, _conf.Server.Ext))
+					f, err := os.Create(path.Join("builds/", dest, config.Cfg.Server.Ext))
 					if err != nil {
 						log.Fatal(err)
 					}
 					defer f.Close()
 
-					blog.renderIndex(f, template, page)
+					blog.RenderIndex(f, template, page)
 					go g.Add(sitemap.URL{Loc: ServeQualifiedUrl(dest), Priority: `0.5`})
 				}
 			}
@@ -92,17 +97,17 @@ func BuildCommand() cli.Command {
 }
 
 func BuildUrl(url string) string {
-	if _conf.Server.Url == "" {
-		_conf.Server.Url, _ = os.Getwd()
-		_conf.Server.Url += "/builds/"
+	if config.Cfg.Server.Url == "" {
+		config.Cfg.Server.Url, _ = os.Getwd()
+		config.Cfg.Server.Url += "/builds/"
 	}
 
-	return _conf.Server.Url + url
+	return config.Cfg.Server.Url + url
 }
 
 func BuildQualifiedUrl(url string) string {
-	if _conf.Server.Ext != "" {
-		return BuildUrl(url) + "/" + _conf.Server.Ext
+	if config.Cfg.Server.Ext != "" {
+		return BuildUrl(url) + "/" + config.Cfg.Server.Ext
 	}
 
 	return BuildUrl(url)
@@ -121,7 +126,7 @@ func buildNestedDirectories(addr string) {
 
 func fileInfo(e fs.DirEntry) (exploredFile string, parameter string) {
 	exploredFile = e.Name()
-	parameter = strings.Replace(e.Name(), "."+_conf.Source.Ext, "", 1)
+	parameter = strings.Replace(e.Name(), "."+config.Cfg.Source.Ext, "", 1)
 
 	return
 }

@@ -1,4 +1,4 @@
-package main
+package cms
 
 import (
 	"bytes"
@@ -10,22 +10,14 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/debuqer/kuti/internal/config"
 	"github.com/gomarkdown/markdown"
 	"github.com/gomarkdown/markdown/html"
 	"github.com/gomarkdown/markdown/parser"
 )
 
-type Post struct {
-	Title         string
-	Content       string
-	Link          string
-	Date          string
-	EstimatedTime int
-	Tags          []string
-}
-
 type Blog struct {
-	Config      Config
+	Config      config.Config
 	CurrentPost Post
 	Posts       map[string][]Post
 }
@@ -44,22 +36,22 @@ func mdToHTML(md []byte) []byte {
 	return markdown.Render(doc, renderer)
 }
 
-func (b *Blog) fetch(dir string) error {
+func (b *Blog) Fetch(dir string) error {
 	posts := make([]Post, 0)
 
 	entries, _ := os.ReadDir(dir)
 	for _, e := range entries {
 		if e.IsDir() {
-			b.fetch(path.Join(dir, e.Name()))
+			b.Fetch(path.Join(dir, e.Name()))
 		} else {
-			post := b.find(path.Join(dir, e.Name()))
+			post := b.Find(path.Join(dir, e.Name()))
 
 			fmt.Println(post.Title + " added to " + dir)
 			posts = append(posts, post)
 		}
 	}
 
-	b.Config = _conf
+	b.Config = config.Cfg
 	if b.Posts == nil {
 		b.Posts = make(map[string][]Post)
 	}
@@ -68,14 +60,14 @@ func (b *Blog) fetch(dir string) error {
 		return strings.Compare(posts[i].Date, posts[j].Date) == 1
 	})
 
-	b.Posts[strings.Replace(dir, _conf.Source.Dir, "", 1)] = posts
+	b.Posts[strings.Replace(dir, config.Cfg.Source.Dir, "", 1)] = posts
 	return nil
 }
 
-func (b *Blog) find(addr string) Post {
+func (b *Blog) Find(addr string) Post {
 	ext := ""
-	if !strings.HasSuffix(addr, "."+_conf.Source.Ext) {
-		ext += "." + _conf.Source.Ext
+	if !strings.HasSuffix(addr, "."+config.Cfg.Source.Ext) {
+		ext += "." + config.Cfg.Source.Ext
 	}
 
 	fileAddr := path.Join(addr + ext)
@@ -88,11 +80,11 @@ func (b *Blog) find(addr string) Post {
 	content := bytes.NewBuffer(mdToHTML(buf)).String()
 
 	fileName := strings.Split(fs.Name(), "/")[len(strings.Split(fs.Name(), "/"))-1]
-	fileName = strings.Replace(fileName, "."+_conf.Source.Ext, "", 1)
+	fileName = strings.Replace(fileName, "."+config.Cfg.Source.Ext, "", 1)
 	post := Post{
 		fileName,
 		content,
-		_conf.Server.Url + path.Join("article", fileName),
+		config.Cfg.Server.Url + path.Join("article", fileName),
 		date.ModTime().Format("January 02, 2006 15:04"),
 		len(strings.Split(content, " ")) / 250,
 		make([]string, 0),
@@ -101,35 +93,35 @@ func (b *Blog) find(addr string) Post {
 	return post
 }
 
-func GetPostList(addr string) []Post {
+func (blog *Blog) GetPostList(addr string) []Post {
 	return blog.Posts[addr]
 }
 
-func GetRootPosts() []Post {
-	return GetPostList("")
+func (blog *Blog) GetRootPosts() []Post {
+	return blog.GetPostList("")
 }
 
-func GetPost(addr string) Post {
-	return blog.find(path.Join(_conf.Source.Dir, addr))
+func (blog *Blog) GetPost(addr string) Post {
+	return blog.Find(path.Join(config.Cfg.Source.Dir, addr))
 }
 
-func GetPostContent(addr string) string {
-	return GetPost(addr).Content
+func (blog *Blog) GetPostContent(addr string) string {
+	return blog.GetPost(addr).Content
 }
 
-func CurrentPost() Post {
+func (blog *Blog) GetCurrentPost() Post {
 	return blog.CurrentPost
 }
 
-func (blog *Blog) renderIndex(wr io.Writer, tpl *template.Template, page Route) {
-	tpl.ParseFiles(path.Join(_conf.Template.Dir, page.Template))
+func (blog *Blog) RenderIndex(wr io.Writer, tpl *template.Template, page config.Route) {
+	tpl.ParseFiles(path.Join(config.Cfg.Template.Dir, page.Template))
 
 	tpl.ExecuteTemplate(wr, page.Template, blog)
 }
 
-func (blog *Blog) renderPost(wr io.Writer, tpl *template.Template, page Route, param string) {
-	tpl.ParseFiles(path.Join(_conf.Template.Dir, page.Template))
-	blog.CurrentPost = blog.find(path.Join(_conf.Source.Dir, page.Dir, param))
+func (blog *Blog) RenderPost(wr io.Writer, tpl *template.Template, page config.Route, param string) {
+	tpl.ParseFiles(path.Join(config.Cfg.Template.Dir, page.Template))
+	blog.CurrentPost = blog.Find(path.Join(config.Cfg.Source.Dir, page.Dir, param))
 
 	tpl.ExecuteTemplate(wr, page.Template, blog)
 }

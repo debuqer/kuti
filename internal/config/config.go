@@ -1,10 +1,12 @@
-package main
+package config
 
 import (
 	"io/ioutil"
 
 	"gopkg.in/yaml.v3"
 )
+
+var Cfg Config
 
 type Route struct {
 	Type      string
@@ -38,7 +40,7 @@ type Config struct {
 	Routes map[string]Route
 }
 
-func (c *Config) load() (err error) {
+func (c *Config) Load() (err error) {
 
 	buf, err := ioutil.ReadFile("config.yml")
 	if err != nil {
