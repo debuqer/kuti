@@ -19,9 +19,9 @@ func main() {
 	}
 
 	app.Commands = []cli.Command{
-		commands.InitCommand(),
-		commands.ServeCommand(),
-		commands.BuildCommand(),
+		commands.Init(),
+		commands.Serve(),
+		commands.Build(),
 	}
 
 	err = app.Run(os.Args)

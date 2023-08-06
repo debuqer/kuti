@@ -7,7 +7,7 @@ import (
 	"github.com/urfave/cli"
 )
 
-func InitCommand() cli.Command {
+func Init() cli.Command {
 	return cli.Command{
 		Name:    "init",
 		Aliases: []string{"i"},

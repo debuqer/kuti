@@ -16,7 +16,7 @@ import (
 	"github.com/urfave/cli"
 )
 
-func BuildCommand() cli.Command {
+func Build() cli.Command {
 	return cli.Command{
 		Name:    "build",
 		Aliases: []string{"b"},

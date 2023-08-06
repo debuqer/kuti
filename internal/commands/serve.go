@@ -12,7 +12,7 @@ import (
 	"github.com/urfave/cli"
 )
 
-func ServeCommand() cli.Command {
+func Serve() cli.Command {
 	return cli.Command{
 		Name:    "serve",
 		Aliases: []string{"s"},
