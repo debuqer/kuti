@@ -18,7 +18,7 @@ func BuildCommand() cli.Command {
 	return cli.Command{
 		Name:    "build",
 		Aliases: []string{"b"},
-		Usage:   "Build the application",
+		Usage:   "build [project-root] [build-address]",
 		Action: func(c *cli.Context) error {
 			var wg sync.WaitGroup
 
