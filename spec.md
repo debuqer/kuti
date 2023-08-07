@@ -41,11 +41,11 @@
   - Link: /blog
   - Template: blog/tpls/blog.html
 - Post
-  - Link: /post/{for every md file in "blog/posts"}
+  - Link: /post/{ blog/posts/*.md }
   - Template: blog/tpls/post.html
 - Videos
   - Link: /videos
   - Template: blog/tpls/videos.html
 - Video
-  - Link: /video/{for every md file in "blog/videos" }  
+  - Link: /video/{ blog/posts/(.*).md }  
   - Template: video.html  
