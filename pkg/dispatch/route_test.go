@@ -11,7 +11,7 @@ func TestRoute(t *testing.T) {
 	}
 
 	r := Route{
-		Pattern: "blog/category/it/apple-new-features",
+		Pattern: "blog/category/it/a",
 	}
 	r.addToTree(0, &seg)
 
@@ -28,6 +28,9 @@ func TestRoute(t *testing.T) {
 		Pattern: "blog/category/tech/apple-new-features/2",
 	}
 	r.addToTree(0, &seg)
+
+	url := "blog/category/tech/apple-new-features/2"
+	Parse(url, &seg)
 
 	t.Errorf("1")
 }

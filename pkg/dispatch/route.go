@@ -49,3 +49,19 @@ func (r *Route) addToTree(offset int, root *Segment) {
 		}
 	}
 }
+
+func Parse(url string, root *Segment) *Segment {
+	sections := strings.Split(url, "/")
+
+	cur := root
+	for _, section := range sections {
+		for _, k := range cur.Childs {
+			if k.Name == section {
+				cur = k
+				break
+			}
+		}
+	}
+
+	return cur
+}
