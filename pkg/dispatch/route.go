@@ -3,11 +3,19 @@ package dispatch
 import (
 	"fmt"
 	"regexp"
+	"strconv"
 	"strings"
 )
 
+type Parameter struct {
+	Name  string
+	Value string
+}
+
 type Link struct {
-	Pattern string
+	Pattern      string
+	HasParameter bool
+	Parameters   map[string]*Parameter
 }
 
 type Route struct {
@@ -16,15 +24,22 @@ type Route struct {
 	Template string
 }
 
-func (l *Link) Extend() (format, address string) {
+func (l *Link) Extend() {
+	var address string
+	l.Parameters = make(map[string]*Parameter)
+
 	segments := strings.Split(l.Pattern, "/")
 
 	for _, segment := range segments {
-		if regexp.MustCompile(`\{ (.*) files in (.*)\ }`).MatchString(segment) {
+		if regexp.MustCompile(`\{ files in (.*) \}`).MatchString(segment) {
 
-			fmt.Sscanf(segment, "{ %s files in %s }", &format, &address)
+			fmt.Sscanf(segment, "{ files in %s }", &address)
+			fmt.Println(address)
+
+			if address != "" {
+				l.HasParameter = true
+				l.Parameters[strconv.Itoa(len(l.Parameters))] = &Parameter{Name: address}
+			}
 		}
 	}
-
-	return
 }
