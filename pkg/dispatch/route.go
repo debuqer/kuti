@@ -1,45 +1,40 @@
 package dispatch
 
 import (
-	"fmt"
-	"regexp"
-	"strconv"
 	"strings"
 )
 
-type Parameter struct {
-	Name  string
-	Value string
-}
-
-type Link struct {
-	Pattern      string
-	HasParameter bool
-	Parameters   map[string]*Parameter
+type Segment struct {
+	IsParameter bool
+	IsTerminal  bool
+	Name        string
+	P           *Segment
+	Childs      []*Segment
+	Route       *Route
 }
 
 type Route struct {
 	Name     string
-	Link     *Link
-	Template string
+	Pattern  string
+	CallBack any
 }
 
-func (l *Link) Extend() {
-	var address string
-	l.Parameters = make(map[string]*Parameter)
+func (r *Route) addToTree(offset int, root *Segment) {
+	sections := strings.Split(r.Pattern, "/")[offset:]
 
-	segments := strings.Split(l.Pattern, "/")
+	if len(sections) > 0 {
+		seg := Segment{
+			IsParameter: false,
+			Name:        sections[0],
+			P:           root,
+			IsTerminal:  (len(sections) == 1),
+		}
 
-	for _, segment := range segments {
-		if regexp.MustCompile(`\{ files in (.*) \}`).MatchString(segment) {
-
-			fmt.Sscanf(segment, "{ files in %s }", &address)
-			fmt.Println(address)
-
-			if address != "" {
-				l.HasParameter = true
-				l.Parameters[strconv.Itoa(len(l.Parameters))] = &Parameter{Name: address}
-			}
+		if seg.IsTerminal {
+			seg.Route = r
+		} else {
+			root.Childs = append(root.Childs, &seg)
+			r.addToTree(offset+1, &seg)
 		}
 	}
 }
