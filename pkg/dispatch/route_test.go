@@ -1,6 +1,7 @@
 package dispatch
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -11,26 +12,17 @@ func TestRoute(t *testing.T) {
 	}
 
 	r := Route{
-		Pattern: "blog/category/it/a",
+		Pattern: "blog/posts/{post-number}/page",
 	}
 	r.addToTree(0, &seg)
 
 	r = Route{
-		Pattern: "blog/category/food/apple-new-features",
+		Pattern: "blog/posts/hello",
 	}
 	r.addToTree(0, &seg)
 
-	r = Route{
-		Pattern: "blog/category/tech/apple-new-features/1",
-	}
-	r.addToTree(0, &seg)
-	r = Route{
-		Pattern: "blog/category/tech/apple-new-features/2",
-	}
-	r.addToTree(0, &seg)
-
-	url := "blog/category/tech/apple-new-features/2"
-	Parse(url, &seg)
+	url := "blog/posts/1/page"
+	fmt.Println(Parse(url, &seg))
 
 	t.Errorf("1")
 }

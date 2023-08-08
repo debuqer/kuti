@@ -1,6 +1,7 @@
 package dispatch
 
 import (
+	"regexp"
 	"strings"
 )
 
@@ -35,7 +36,7 @@ func (r *Route) addToTree(offset int, root *Segment) {
 		if len(sections) >= 1 {
 			if newPath {
 				seg = &Segment{
-					IsParameter: false,
+					IsParameter: regexp.MustCompile(`\{.*\}`).MatchString(sections[0]),
 					Name:        sections[0],
 					P:           root,
 				}
@@ -56,7 +57,7 @@ func Parse(url string, root *Segment) *Segment {
 	cur := root
 	for _, section := range sections {
 		for _, k := range cur.Childs {
-			if k.Name == section {
+			if k.Name == section || k.IsParameter {
 				cur = k
 				break
 			}
