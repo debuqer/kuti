@@ -6,7 +6,6 @@ import (
 
 type Segment struct {
 	IsParameter bool
-	IsTerminal  bool
 	Name        string
 	P           *Segment
 	Childs      []*Segment
@@ -23,18 +22,30 @@ func (r *Route) addToTree(offset int, root *Segment) {
 	sections := strings.Split(r.Pattern, "/")[offset:]
 
 	if len(sections) > 0 {
-		seg := Segment{
-			IsParameter: false,
-			Name:        sections[0],
-			P:           root,
-			IsTerminal:  (len(sections) == 1),
+		var seg *Segment
+		newPath := true
+		for _, k := range root.Childs {
+			if k.Name == sections[0] {
+				seg = k
+				newPath = false
+				break
+			}
 		}
 
-		if seg.IsTerminal {
-			seg.Route = r
+		if len(sections) >= 1 {
+			if newPath {
+				seg = &Segment{
+					IsParameter: false,
+					Name:        sections[0],
+					P:           root,
+				}
+
+				root.Childs = append(root.Childs, seg)
+			}
+
+			r.addToTree(offset+1, seg)
 		} else {
-			root.Childs = append(root.Childs, &seg)
-			r.addToTree(offset+1, &seg)
+			seg.Route = r
 		}
 	}
 }
