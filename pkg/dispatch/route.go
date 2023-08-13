@@ -77,7 +77,7 @@ func (seg *Segment) Draw(indent int) {
 }
 
 func Parse(url string) (*Route, error) {
-	sections := strings.Split(""+url, "/")[1:]
+	sections := strings.Split(url, "/")[1:]
 
 	root := &Root
 	for _, section := range sections {
