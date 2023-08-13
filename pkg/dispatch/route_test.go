@@ -1,37 +1,68 @@
 package dispatch
 
 import (
-	"fmt"
 	"testing"
 )
 
 func init() {
-	NewRoute(&Route{
+	GET(&Route{
 		Name:    "root",
 		Pattern: "/",
 	})
 
-	NewRoute(&Route{
+	GET(&Route{
 		Name:    "blog-index",
 		Pattern: "/blog",
 	})
 
-	NewRoute(&Route{
-		Name:    "blog-post",
-		Pattern: "/blog/{pid}/posts",
-	})
-
-	NewRoute(&Route{
+	GET(&Route{
 		Name:    "blog-posts",
 		Pattern: "/blog/posts",
+	})
+
+	GET(&Route{
+		Name:    "blog-post",
+		Pattern: "/blog/{pid}/posts",
 	})
 
 }
 
 func TestSlashRoute(t *testing.T) {
-	r, err := Parse("/blog/{pid}/posts")
-	fmt.Println(r)
-	fmt.Println(err)
+	r, _ := Parse("/")
 
-	t.Errorf("detected %q, %q was expected", "1", "root")
+	if r.Route.Name != "root" {
+		t.Errorf("%q expected, but %q given", r.Route.Name, "root")
+	}
+}
+
+func TestEmptyRoute(t *testing.T) {
+	r, _ := Parse("")
+
+	if r.Route.Name != "root" {
+		t.Errorf("%q expected, but %q given", r.Route.Name, "root")
+	}
+}
+
+func TestBlogRoute(t *testing.T) {
+	r, _ := Parse("/blog")
+
+	if r.Route.Name != "blog-index" {
+		t.Errorf("%q expected, but %q given", r.Route.Name, "root")
+	}
+}
+
+func TestBlogPostsRoute(t *testing.T) {
+	r, _ := Parse("/blog/posts")
+
+	if r.Route.Name != "blog-posts" {
+		t.Errorf("%q expected, but %q given", r.Route.Name, "root")
+	}
+}
+
+func TestBlogPostRoute(t *testing.T) {
+	r, _ := Parse("/blog/12/posts")
+
+	if r.Route.Name != "blog-post" {
+		t.Errorf("%q expected, but %q given", r.Route.Name, "root")
+	}
 }

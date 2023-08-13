@@ -3,8 +3,14 @@ package dispatch
 import (
 	"errors"
 	"fmt"
+	"regexp"
 	"strings"
 )
+
+type Param struct {
+	Key   string
+	Value string
+}
 
 type Segment struct {
 	Name        string
@@ -14,12 +20,32 @@ type Segment struct {
 }
 
 type Route struct {
+	Methods  []string
 	Name     string
 	Pattern  string
 	CallBack any
 }
 
+type RouteOptions struct {
+	Route  *Route
+	Params map[string]string
+}
+
 var Router Segment
+
+func (parent *Segment) Match(Name string) (*Segment, *Param, error) {
+	for _, k := range parent.Childs {
+		if regexp.MustCompile(`\{(.*)\}`).MatchString(k.Name) {
+			pname := regexp.MustCompile(`\{(.*)\}`).ReplaceAllString(k.Name, "$1")
+
+			return k, &Param{Key: pname, Value: Name}, nil
+		} else if k.Name == Name {
+			return k, nil, nil
+		}
+	}
+
+	return nil, nil, errors.New("404")
+}
 
 func (parent *Segment) Lookup(Name string) (*Segment, error) {
 	for _, k := range parent.Childs {
@@ -29,6 +55,36 @@ func (parent *Segment) Lookup(Name string) (*Segment, error) {
 	}
 
 	return nil, errors.New("404")
+}
+
+func POST(r *Route) {
+	r.Methods = append(r.Methods, "POST")
+	r.Compile()
+}
+
+func GET(r *Route) {
+	r.Methods = append(r.Methods, "GET")
+	r.Compile()
+}
+
+func PUT(r *Route) {
+	r.Methods = append(r.Methods, "PUT")
+	r.Compile()
+}
+
+func DELETE(r *Route) {
+	r.Methods = append(r.Methods, "DELETE")
+	r.Compile()
+}
+
+func HEAD(r *Route) {
+	r.Methods = append(r.Methods, "HEAD")
+	r.Compile()
+}
+
+func Method(methods []string, r *Route) {
+	r.Methods = methods
+	r.Compile()
 }
 
 func NewRoute(r *Route) {
@@ -76,18 +132,26 @@ func (seg *Segment) Draw(indent int) {
 
 }
 
-func Parse(url string) (*Route, error) {
+func Parse(url string) (*RouteOptions, error) {
+	if url == "" {
+		url = "/"
+	}
 	sections := strings.Split(url, "/")[1:]
+
+	params := make(map[string]string)
 
 	root := &Router
 	for _, section := range sections {
-		segment, err := root.Lookup(section)
+		segment, param, err := root.Match(section)
 		if err == nil {
+			if param != nil {
+				params[param.Key] = param.Value
+			}
 			root = segment
 		} else {
 			return nil, errors.New("404")
 		}
 	}
 
-	return root.Route, nil
+	return &RouteOptions{Route: root.Route, Params: params}, nil
 }
