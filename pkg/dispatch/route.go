@@ -1,15 +1,15 @@
 package dispatch
 
 import (
-	"regexp"
+	"errors"
+	"fmt"
 	"strings"
 )
 
-type Node struct {
-	IsParameter bool
+type Segment struct {
 	Name        string
-	P           *Node
-	Childs      []*Node
+	IsParameter bool
+	Childs      []*Segment
 	Route       *Route
 }
 
@@ -19,52 +19,75 @@ type Route struct {
 	CallBack any
 }
 
-func (r *Route) addToTree(offset int, root *Node) {
-	sections := strings.Split(r.Pattern, "/")[offset:]
+var Root Segment
 
-	if len(sections) > 0 {
-		var seg *Node
-		newPath := true
-		for _, k := range root.Childs {
-			if k.Name == sections[0] {
-				seg = k
-				newPath = false
-				break
-			}
-		}
-
-		if newPath {
-			seg = &Node{
-				IsParameter: regexp.MustCompile(`\{.*\}`).MatchString(sections[0]),
-				Name:        sections[0],
-				P:           root,
-			}
-
-			root.Childs = append(root.Childs, seg)
-		}
-
-		if len(sections) == 1 {
-			seg.Route = r
-		}
-
-		if len(sections) > 1 {
-			r.addToTree(offset+1, seg)
+func (parent *Segment) Lookup(Name string) (*Segment, error) {
+	for _, k := range parent.Childs {
+		if k.Name == Name {
+			return k, nil
 		}
 	}
+
+	return nil, errors.New("404")
 }
 
-func Parse(url string, root *Node) *Node {
-	sections := strings.Split(url, "/")
+func NewRoute(r *Route) {
+	r.Compile()
+}
 
-	cur := root
+func NewSegment(parent *Segment, Name string) *Segment {
+	seg, err := parent.Lookup(Name)
+	if err == nil {
+		return seg
+	}
+
+	new := &Segment{Name: Name}
+	parent.Childs = append(parent.Childs, new)
+
+	return new
+}
+
+func (r *Route) Compile() {
+	sections := strings.Split(r.Pattern, "/")[1:]
+
+	root := &Root
 	for _, section := range sections {
-		for _, k := range cur.Childs {
-			if k.Name == section || k.IsParameter {
-				cur = k
-				break
-			}
+		segment := NewSegment(root, section)
+
+		root = segment
+	}
+	root.Route = r
+}
+
+func (seg *Segment) Draw(indent int) {
+	for i := 0; i < indent; i++ {
+		fmt.Print("\t")
+	}
+
+	routeLabel := ""
+	if seg.Route != nil {
+		routeLabel = "( Route: " + seg.Route.Name + ")"
+	}
+
+	fmt.Println("+\"" + seg.Name + "\"" + routeLabel)
+	for _, k := range seg.Childs {
+		k.Draw(indent + 1)
+	}
+
+}
+
+func Parse(url string) (*Route, error) {
+	sections := strings.Split(""+url, "/")[1:]
+
+	root := &Root
+	for _, section := range sections {
+		segment, err := root.Lookup(section)
+		if err == nil {
+			root = segment
+		} else {
+			return nil, errors.New("404")
 		}
 	}
 
-	return cur
+	return root.Route, nil
 }

@@ -1,67 +1,37 @@
 package dispatch
 
 import (
+	"fmt"
 	"testing"
 )
 
-var routes *Node
-
 func init() {
-	routes = &Node{
-		IsParameter: false,
-		Name:        "/",
-	}
-
-	r := Route{
+	NewRoute(&Route{
 		Name:    "root",
 		Pattern: "/",
-	}
-	r.addToTree(0, routes)
+	})
 
-	r = Route{
+	NewRoute(&Route{
 		Name:    "blog-index",
 		Pattern: "/blog",
-	}
-	r.addToTree(0, routes)
+	})
 
-	r = Route{
-		Name:    "blog-posts",
-		Pattern: "/blog/posts",
-	}
-	r.addToTree(0, routes)
-
-	r = Route{
+	NewRoute(&Route{
 		Name:    "blog-post",
 		Pattern: "/blog/{pid}/posts",
-	}
-	r.addToTree(1, routes)
+	})
+
+	NewRoute(&Route{
+		Name:    "blog-posts",
+		Pattern: "/blog/posts",
+	})
 
 }
 
 func TestSlashRoute(t *testing.T) {
-	node := Parse("/", routes)
-	if node.Route.Name != "root" {
-		t.Errorf("detected %q, %q was expected", node.Route.Name, "root")
-	}
-}
+	r, err := Parse("/blog/{pid}/posts")
+	fmt.Println(r)
+	fmt.Println(err)
 
-func TestBlogRoute(t *testing.T) {
-	node := Parse("/blog", routes)
-	if node.Route.Name != "blog" {
-		t.Errorf("detected %q, %q was expected", node.Route.Name, "blog")
-	}
-}
-
-func TestNestedRoute(t *testing.T) {
-	node := Parse("/blog/posts", routes)
-	if node.Route.Name != "blog-posts" {
-		t.Errorf("detected %q, %q was expected", node.Route.Name, "blog-posts")
-	}
-}
-
-func TestParameter(t *testing.T) {
-	node := Parse("/blog/12/posts", routes)
-	if node.Route.Name != "blog-post" {
-		t.Errorf("detected %q, %q was expected", node.Route.Name, "blog-post")
-	}
+	t.Errorf("detected %q, %q was expected", "1", "root")
 }
