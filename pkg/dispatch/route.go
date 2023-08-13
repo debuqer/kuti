@@ -19,7 +19,7 @@ type Route struct {
 	CallBack any
 }
 
-var Root Segment
+var Router Segment
 
 func (parent *Segment) Lookup(Name string) (*Segment, error) {
 	for _, k := range parent.Childs {
@@ -50,7 +50,7 @@ func NewSegment(parent *Segment, Name string) *Segment {
 func (r *Route) Compile() {
 	sections := strings.Split(r.Pattern, "/")[1:]
 
-	root := &Root
+	root := &Router
 	for _, section := range sections {
 		segment := NewSegment(root, section)
 
@@ -79,7 +79,7 @@ func (seg *Segment) Draw(indent int) {
 func Parse(url string) (*Route, error) {
 	sections := strings.Split(url, "/")[1:]
 
-	root := &Root
+	root := &Router
 	for _, section := range sections {
 		segment, err := root.Lookup(section)
 		if err == nil {
