@@ -1,0 +1,28 @@
+name: "Blog"
+description: "This is going to be your description"
+author: 
+  - name: "Debuqer"
+  - summary: "A PHP developer"
+  - image: "http://gravater.com/bagher2g"
+  - contact:
+    - email:  "bagher2g@gmail.com"
+    - phonenumber: "+98939-731-6601"
+    - social: 
+      - instagram:
+        - url: "instagram.com"
+        - username: "debuqer"
+        - icon: "insta.jpg"
+repo:
+  - content:
+    - type: "md"
+    - dir: "repo/blog/contents"
+  - template:
+    - type: "html"
+    - dir: "repo/blog/templates"
+routes:
+  "/":
+    - render: "index"
+  "/blog"
+    - render: "blog"
+  "/blog/{file_name}"
+    - render: "post"
