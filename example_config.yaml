@@ -1,28 +1,45 @@
-name: "Blog"
-description: "This is going to be your description"
-author: 
-  - name: "Debuqer"
-  - summary: "A PHP developer"
-  - image: "http://gravater.com/bagher2g"
-  - contact:
-    - email:  "bagher2g@gmail.com"
-    - phonenumber: "+98939-731-6601"
-    - social: 
-      - instagram:
-        - url: "instagram.com"
-        - username: "debuqer"
-        - icon: "insta.jpg"
-repo:
-  - content:
-    - type: "md"
-    - dir: "repo/blog/contents"
-  - template:
-    - type: "html"
-    - dir: "repo/blog/templates"
-routes:
-  "/":
-    - render: "index"
-  "/blog"
-    - render: "blog"
-  "/blog/{file_name}"
-    - render: "post"
+# Blog configuration
+blog:
+  # Blog name
+  name: My Blog
+
+  # Blog description 
+  description: A simple blog about my thoughts and experiences
+
+  # Blog routes
+  routes:
+    # Homepage route
+    home: 
+      url: /
+      template: homepage
+    # Post list route
+    posts:
+      url: /posts
+      template: post_list
+    # Single post route 
+    post:
+      url: /post/:slug
+      template: post
+
+  # Author information
+  author: 
+    name: John Doe
+    bio: John is a blogger who enjoys writing about life and technology.
+    profile_image: images/profile.png
+
+  # Blog technical details  
+  tech:
+    # Theme directory 
+    theme_dir: themes/default
+    # Content directory
+    content_dir: content
+
+  # Template directories
+  templates:
+    default: 
+      # Homepage template 
+      homepage: templates/homepage.html
+      # Post list template
+      post_list: templates/post-list.html
+      # Single post template
+      post: templates/post.html
