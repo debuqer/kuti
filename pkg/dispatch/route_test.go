@@ -1,7 +1,9 @@
 package dispatch
 
 import (
+	"math/rand"
 	"testing"
+	"time"
 )
 
 func init() {
@@ -65,4 +67,35 @@ func TestBlogPostRoute(t *testing.T) {
 	if r.Route.Name != "blog-post" {
 		t.Errorf("%q expected, but %q given", r.Route.Name, "root")
 	}
+}
+
+func BenchmarkRoutesDefine(b *testing.B) {
+
+	for i := 0; i < b.N; i++ {
+		rand.Seed(time.Now().UnixNano())
+
+		// Getting random character
+		c := rand.Int31()
+		GET(&Route{
+			Name:    "blog-index",
+			Pattern: "/" + string(c),
+		})
+	}
+}
+
+func BenchmarkRoutesLoopup(b *testing.B) {
+	var c int32
+	for i := 0; i < b.N; i++ {
+		rand.Seed(time.Now().UnixNano())
+
+		// Getting random character
+		c = rand.Int31()
+
+		GET(&Route{
+			Name:    "blog-index",
+			Pattern: "/" + string(c),
+		})
+	}
+
+	Parse("/blog/" + string(c))
 }
