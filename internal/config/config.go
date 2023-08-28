@@ -8,41 +8,35 @@ import (
 
 var Cfg Config
 
+type Author struct {
+	Name         string
+	Bio          string
+	ProfileImage string
+}
+
+type Tech struct {
+	Url        string
+	ThemeDir   string
+	ContentDir string
+}
+
 type Route struct {
-	Type      string
-	Parameter string
-	Dir       string
-	Template  string
-	Paginate  int
+	Url      string
+	Template string
 }
 
 type Config struct {
-	Name   string
-	Author struct {
-		Name        string
-		Username    string
-		Description string
-		Profile     string
-	}
-	Server struct {
-		Host string
-		Port string
-		Url  string
-		Ext  string
-	}
-	Template struct {
-		Dir string
-	}
-	Source struct {
-		Dir string
-		Ext string
-	}
-	Routes map[string]Route
+	Name        string
+	Description string
+	Routes      []Route
+	Author      Author
+
+	Tech Tech
 }
 
-func (c *Config) Load() (err error) {
+func (c *Config) Load(fname string) (err error) {
 
-	buf, err := ioutil.ReadFile("config.yml")
+	buf, err := ioutil.ReadFile(fname)
 	if err != nil {
 		return
 	}

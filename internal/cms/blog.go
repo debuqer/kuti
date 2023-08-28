@@ -60,14 +60,14 @@ func (b *Blog) Fetch(dir string) error {
 		return strings.Compare(posts[i].Date, posts[j].Date) == 1
 	})
 
-	b.Posts[strings.Replace(dir, config.Cfg.Source.Dir, "", 1)] = posts
+	b.Posts[strings.Replace(dir, config.Cfg.Tech.ContentDir, "", 1)] = posts
 	return nil
 }
 
 func (b *Blog) Find(addr string) Post {
 	ext := ""
-	if !strings.HasSuffix(addr, "."+config.Cfg.Source.Ext) {
-		ext += "." + config.Cfg.Source.Ext
+	if !strings.HasSuffix(addr, ".md") {
+		ext += ".md"
 	}
 
 	fileAddr := path.Join(addr + ext)
@@ -80,11 +80,11 @@ func (b *Blog) Find(addr string) Post {
 	content := bytes.NewBuffer(mdToHTML(buf)).String()
 
 	fileName := strings.Split(fs.Name(), "/")[len(strings.Split(fs.Name(), "/"))-1]
-	fileName = strings.Replace(fileName, "."+config.Cfg.Source.Ext, "", 1)
+	fileName = strings.Replace(fileName, ".md", "", 1)
 	post := Post{
 		fileName,
 		content,
-		config.Cfg.Server.Url + path.Join("article", fileName),
+		config.Cfg.Tech.Url + path.Join("article", fileName),
 		date.ModTime().Format("January 02, 2006 15:04"),
 		len(strings.Split(content, " ")) / 250,
 		make([]string, 0),
@@ -102,7 +102,7 @@ func (blog *Blog) GetRootPosts() []Post {
 }
 
 func (blog *Blog) GetPost(addr string) Post {
-	return blog.Find(path.Join(config.Cfg.Source.Dir, addr))
+	return blog.Find(path.Join(config.Cfg.Tech.ContentDir, addr))
 }
 
 func (blog *Blog) GetPostContent(addr string) string {
@@ -114,14 +114,14 @@ func (blog *Blog) GetCurrentPost() Post {
 }
 
 func (blog *Blog) RenderIndex(wr io.Writer, tpl *template.Template, page config.Route) {
-	tpl.ParseFiles(path.Join(config.Cfg.Template.Dir, page.Template))
+	tpl.ParseFiles(path.Join(config.Cfg.Tech.ThemeDir, page.Template))
 
 	tpl.ExecuteTemplate(wr, page.Template, blog)
 }
 
 func (blog *Blog) RenderPost(wr io.Writer, tpl *template.Template, page config.Route, param string) {
-	tpl.ParseFiles(path.Join(config.Cfg.Template.Dir, page.Template))
-	blog.CurrentPost = blog.Find(path.Join(config.Cfg.Source.Dir, page.Dir, param))
+	tpl.ParseFiles(path.Join(config.Cfg.Tech.ThemeDir, page.Template))
+	blog.CurrentPost = blog.Find(path.Join(config.Cfg.Tech.ContentDir, page.Template, param))
 
 	tpl.ExecuteTemplate(wr, page.Template, blog)
 }

@@ -13,15 +13,13 @@ func main() {
 	app.Name = "Kuti"
 	app.Usage = "Build your fast and secure hacker blog"
 
-	err := config.Cfg.Load()
+	err := config.Cfg.Load("config.yml")
 	if err != nil {
 		panic(err)
 	}
 
 	app.Commands = []cli.Command{
 		commands.Init(),
-		commands.Serve(),
-		commands.Build(),
 	}
 
 	err = app.Run(os.Args)
