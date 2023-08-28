@@ -35,8 +35,8 @@ var Router Segment
 
 func (parent *Segment) Match(Name string) (*Segment, *Param, error) {
 	for _, k := range parent.Childs {
-		if regexp.MustCompile(`\{(.*)\}`).MatchString(k.Name) {
-			pname := regexp.MustCompile(`\{(.*)\}`).ReplaceAllString(k.Name, "$1")
+		if regexp.MustCompile(`\:(.*)`).MatchString(k.Name) {
+			pname := regexp.MustCompile(`\:(.*)`).ReplaceAllString(k.Name, "$1")
 
 			return k, &Param{Key: pname, Value: Name}, nil
 		} else if k.Name == Name {

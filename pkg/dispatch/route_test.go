@@ -24,7 +24,7 @@ func init() {
 
 	GET(&Route{
 		Name:    "blog-post",
-		Pattern: "/blog/{pid}/posts",
+		Pattern: "/blog/:pid/posts",
 	})
 
 }
