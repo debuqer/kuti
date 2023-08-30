@@ -8,6 +8,10 @@ import (
 
 var Cfg Config
 
+type Configuration interface {
+	Load(string) error
+}
+
 type Author struct {
 	Name         string
 	Bio          string
