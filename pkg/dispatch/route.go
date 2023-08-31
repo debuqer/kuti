@@ -7,6 +7,15 @@ import (
 	"strings"
 )
 
+type CallBack interface {
+	Render(*RouteOptions)
+}
+
+type TemplateCallBack struct {
+	Template string
+	Params   map[string]string
+}
+
 type Param struct {
 	Key   string
 	Value string
@@ -23,7 +32,7 @@ type Route struct {
 	Methods  []string
 	Name     string
 	Pattern  string
-	CallBack any
+	CallBack CallBack
 }
 
 type RouteOptions struct {
@@ -154,4 +163,8 @@ func Parse(url string) (*RouteOptions, error) {
 	}
 
 	return &RouteOptions{Route: root.Route, Params: params}, nil
+}
+
+func (t *TemplateCallBack) Render(rp *RouteOptions) {
+	fmt.Println(t)
 }
