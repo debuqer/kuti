@@ -15,9 +15,9 @@ func (b *Blog) ParseRoutes() {
 		Pattern: "/",
 	})
 
-	for _, r := range b.Config.Routes {
+	for rName, r := range b.Config.Routes {
 		dispatch.GET(&dispatch.Route{
-			Name:    r.Url,
+			Name:    rName,
 			Pattern: r.Url,
 		})
 	}
