@@ -27,12 +27,13 @@ type Tech struct {
 type Route struct {
 	Url      string
 	Template string
+	Lookup   string
 }
 
 type Config struct {
 	Name        string
 	Description string
-	Routes      []Route
+	Routes      map[string]Route
 	Author      Author
 
 	Tech Tech

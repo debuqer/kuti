@@ -18,6 +18,7 @@ routes:
   post:
     url: /post/:slug
     template: post
+    lookup: post
 
 # Author information
 author: 

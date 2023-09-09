@@ -11,18 +11,20 @@ var b Blog
 
 func init() {
 	c := config.Config{}
-	c.Routes = append(c.Routes, config.Route{
+	c.Routes = make(map[string]config.Route)
+
+	c.Routes["list"] = config.Route{
 		Url:      "/list",
 		Template: "list.html",
-	})
-	c.Routes = append(c.Routes, config.Route{
+	}
+	c.Routes["post"] = config.Route{
 		Url:      "/blog/:pid",
 		Template: "pid.html",
-	})
-	c.Routes = append(c.Routes, config.Route{
+	}
+	c.Routes["comments"] = config.Route{
 		Url:      "/blog/:pid/comments",
 		Template: "comment.html",
-	})
+	}
 
 	dispatch.GET(&dispatch.Route{
 		Name:    "root",
